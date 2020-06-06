@@ -1,3 +1,20 @@
+var express = require('express');
+var app = express();
+var path = require('path');
+
+//Home page route, sends the home-page.html file
+app.get('/', function(req, res) {
+  res.sendFile(path.join(__dirname + '/home-page.html'));
+  //__dirname is a keyword for the folder your project is located in
+});
+
+//set the port to 3000
+var port = "3000";
+app.set('port', port);
+module.exports = app;
+
+/*because I do not understand this code*/
+/*
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -38,4 +55,4 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+module.exports = app;*/
