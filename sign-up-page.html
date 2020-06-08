@@ -16,19 +16,39 @@ body, html {
 .w3-bar .w3-button {
   padding: 16px;
 }
+.signupcontainer {
+    /*margin:auto makes it so that it's in the center*/
+    margin: auto;
+    margin-top: 10%;
+    width: 95%;
+    padding:50px 30px;
+    background-color: white;
+    margin-bottom: 5%;
+}
+.signupcontainer input{
+    margin-left: 16px;
+    margin-right: 16px;
+    padding: 6px;
+}
+.signupcontainer label{
+    float:left;
+    padding: 6px;
+    margin-left: 16px;
+    margin-right: 16px;
+}
 </style>
-<body>
+<body style="background-color:#add8e6">
 <!-- Navbar (sit on top) -->
 <div class="w3-top">
     <div class="w3-bar w3-white w3-card" id="dashboard">
         <!-- Stick a logo picture here with the name-->
-      <a href="/" class="w3-bar-item w3-button w3-wide">LOGO</a>
+      <a href="#home" class="w3-bar-item w3-button w3-wide">ELM</a>
       <!-- Right-sided navbar links -->
       <!-- Note: href can go to different links, or in this case, sections of the website. It's #id, where id is the id of the section-->
       <div class="w3-right w3-hide-small">
-        <a href="/#about" class="w3-bar-item w3-button">ABOUT</a>
-        <a href="/#team" class="w3-bar-item w3-button">TEAM</a>
-        <a href="/#work" class="w3-bar-item w3-button">WORK</a>
+        <a href="#about" class="w3-bar-item w3-button">ABOUT</a>
+        <a href="#features" class="w3-bar-item w3-button">FEATURES</a>
+        <a href="#team" class="w3-bar-item w3-button">TEAM</a>
         <!--Or I can link it to another html page -->
         <a href="/login" class="w3-bar-item w3-button">LOG IN</a>
         <a href="/signup" class="w3-bar-item w3-button">SIGN UP</a>
@@ -45,10 +65,58 @@ body, html {
     <a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button w3-large w3-padding-16">Close ×</a>
     <a href="#about" onclick="w3_close()" class="w3-bar-item w3-button">ABOUT</a>
     <a href="#team" onclick="w3_close()" class="w3-bar-item w3-button">TEAM</a>
-    <a href="#work" onclick="w3_close()" class="w3-bar-item w3-button">WORK</a>
-    <a href="#pricing" onclick="w3_close()" class="w3-bar-item w3-button">PRICING</a>
-    <a href="#contact" onclick="w3_close()" class="w3-bar-item w3-button">CONTACT</a>
+    <a href="#features" onclick="w3_close()" class="w3-bar-item w3-button">FEATURES</a>
+    <a href="/login" onclick="w3_close()" class="w3-bar-item w3-button">LOG IN</a>
+    <a href="/signup" onclick="w3_close()" class="w3-bar-item w3-button">SIGN UP</a>
 </nav>
+<div class="signupcontainer">
+    <form action="login.php">
+        <h1> Personal Information</h1>
+        <p class="w3-large">
+            <label for="fname" style="width: 40%">FIRST NAME</label>
+            <label for="lname" style="width: 40%">LAST NAME</label>
+            <label for="minitial" style="width: 5%">M.I.</label>
+        </p>
+        <p>
+            <input class="w3-input w3-border" type="text" id="fname" style="width: 40%; float:left">
+            <input class="w3-input w3-border" type="text" id="lname" style="width: 40%; float:left">
+            <input class="w3-input w3-border" type="text" id="minitial" style="width: 5%; float:left">
+        </p>
+        <p class="w3-large">
+            <label for="bdate" style="width: 20%">BIRTH DATE</label>
+        </p>
+        <p>
+            <input class="w3-input w3-border" type="date" id="bdate" style="width: 20%; clear:left">
+        </p>
+        <p class="w3-large">
+            <label for="address" style="width: 40%">ADDRESS</label>
+            <label for="city" style="width: 20%">CITY</label>
+            <label for="country" style="width: 30%">COUNTRY</label>
+        </p>
+        <p>
+            <input class="w3-input w3-border" type="text" id="address" style="width: 40%; float:left">
+            <input class="w3-input w3-border" type="text" id="city" style="width: 20%; float:left">
+            <input class="w3-input w3-border" type="text" id="country" style="width: 30%; float:left">
+        </p>
+        <br style="clear:left"><br>
+        <h1>Account Details</h1>
+        <p class="w3-large"><label for="email" style="clear:left">EMAIL</label></p>
+        <p><input class="w3-input w3-border" type="email" id="email" style="width: 40%; clear:left"></p>
+
+        <p class="w3-large"><label for="usrname" style="clear:left">USERNAME</label></p>
+        <p><input class="w3-input w3-border" type="text" id="password"style="width: 40%; clear:left"></p>
+
+        <p class="w3-large"><label for="password" style="clear:left">PASSWORD</label></p>
+        <p><input class="w3-input w3-border" type="password" id="password"style="width: 40%; clear:left"></p>
+        
+        <p class="w3-large"><label for="cpassword" style="clear:left">CONFIRM PASSWORD</label></p>
+        <p><input class="w3-input w3-border" type="password" id="cpassword"style="width: 40%; clear:left"></p>
+        <br>
+        <p>
+            <button class="w3-button w3-black" type="submit">CREATE ACCOUNT</button>
+        </p>
+    </form>
+</div>
 
 <script>
     // Toggle between showing and hiding the sidebar when clicking the menu icon

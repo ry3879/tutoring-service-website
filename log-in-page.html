@@ -29,40 +29,37 @@ body, html {
 <div class="w3-top">
     <div class="w3-bar w3-white w3-card" id="dashboard">
         <!-- Stick a logo picture here with the name-->
-        <a href="/" class="w3-bar-item w3-button w3-wide">LOGO</a>
-        <!-- Right-sided navbar links -->
-        <div class="w3-right w3-hide-small">
-        <a href="/#about" class="w3-bar-item w3-button">ABOUT</a>
-        <a href="/#team" class="w3-bar-item w3-button">TEAM</a>
-        <a href="/#work" class="w3-bar-item w3-button">WORK</a>
+      <a href="#home" class="w3-bar-item w3-button w3-wide">ELM</a>
+      <!-- Right-sided navbar links -->
+      <!-- Note: href can go to different links, or in this case, sections of the website. It's #id, where id is the id of the section-->
+      <div class="w3-right w3-hide-small">
+        <a href="#about" class="w3-bar-item w3-button">ABOUT</a>
+        <a href="#features" class="w3-bar-item w3-button">FEATURES</a>
+        <a href="#team" class="w3-bar-item w3-button">TEAM</a>
+        <!--Or I can link it to another html page -->
         <a href="/login" class="w3-bar-item w3-button">LOG IN</a>
         <a href="/signup" class="w3-bar-item w3-button">SIGN UP</a>
-        </div>
-        <!-- Hide right-floated links on small screens and replace them with a menu icon -->
-    
-        <a href="javascript:void(0)" class="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium" onclick="w3_open()">
+      </div>
+      <!-- Hide right-floated links on small screens and replace them with a menu icon -->
+  
+      <a href="javascript:void(0)" class="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium" onclick="w3_open()">
         <i class="fa fa-bars"></i>
-        </a>
+      </a>
     </div>
-</div>
+  </div>
 
 <!-- Sidebar on small screens when clicking the menu icon -->
 <nav class="w3-sidebar w3-bar-block w3-black w3-card w3-animate-left w3-hide-medium w3-hide-large" style="display:none" id="mySidebar">
     <a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button w3-large w3-padding-16">Close ×</a>
     <a href="#about" onclick="w3_close()" class="w3-bar-item w3-button">ABOUT</a>
     <a href="#team" onclick="w3_close()" class="w3-bar-item w3-button">TEAM</a>
-    <a href="#work" onclick="w3_close()" class="w3-bar-item w3-button">WORK</a>
-    <a href="#pricing" onclick="w3_close()" class="w3-bar-item w3-button">PRICING</a>
-    <a href="#contact" onclick="w3_close()" class="w3-bar-item w3-button">CONTACT</a>
+    <a href="#features" onclick="w3_close()" class="w3-bar-item w3-button">FEATURES</a>
+    <a href="/login" onclick="w3_close()" class="w3-bar-item w3-button">LOG IN</a>
+    <a href="/signup" onclick="w3_close()" class="w3-bar-item w3-button">SIGN UP</a>
 </nav>
-<!--<div class="container" style="background-color:#add8e6; margin-top: 50px;">
-<br>
-<br>
-<br>
-<br>
-</div>-->
+
 <div class="logincontainer" style="text-align:center">
-    <form action="/triedtologin">
+    <form action="login.php">
         <p class="w3-large"><label for="username">USERNAME</label></p>
         <p><input class="w3-input w3-border" type="text" id="username"></p>
         <p class="w3-large"><label for="password">PASSWORD</label></p>
