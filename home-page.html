@@ -34,13 +34,13 @@ body, html {
 <div class="w3-top">
   <div class="w3-bar w3-white w3-card" id="dashboard">
   	<!-- Stick a logo picture here with the name-->
-    <a href="#home" class="w3-bar-item w3-button w3-wide">LOGO</a>
+    <a href="#home" class="w3-bar-item w3-button w3-wide">ELM</a>
     <!-- Right-sided navbar links -->
     <!-- Note: href can go to different links, or in this case, sections of the website. It's #id, where id is the id of the section-->
     <div class="w3-right w3-hide-small">
       <a href="#about" class="w3-bar-item w3-button">ABOUT</a>
+      <a href="#features" class="w3-bar-item w3-button">FEATURES</a>
       <a href="#team" class="w3-bar-item w3-button">TEAM</a>
-      <a href="#reviews" class="w3-bar-item w3-button">REVIEWS</a>
       <!--Or I can link it to another html page -->
       <a href="/login" class="w3-bar-item w3-button">LOG IN</a>
       <a href="/signup" class="w3-bar-item w3-button">SIGN UP</a>
@@ -58,9 +58,9 @@ body, html {
   <a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button w3-large w3-padding-16">Close ×</a>
   <a href="#about" onclick="w3_close()" class="w3-bar-item w3-button">ABOUT</a>
   <a href="#team" onclick="w3_close()" class="w3-bar-item w3-button">TEAM</a>
-  <a href="#work" onclick="w3_close()" class="w3-bar-item w3-button">WORK</a>
-  <a href="#pricing" onclick="w3_close()" class="w3-bar-item w3-button">PRICING</a>
-  <a href="#contact" onclick="w3_close()" class="w3-bar-item w3-button">CONTACT</a>
+  <a href="#features" onclick="w3_close()" class="w3-bar-item w3-button">FEATURES</a>
+  <a href="/login" onclick="w3_close()" class="w3-bar-item w3-button">LOG IN</a>
+  <a href="/signup" onclick="w3_close()" class="w3-bar-item w3-button">SIGN UP</a>
 </nav>
 
 <!-- Header with full-height image -->
@@ -76,30 +76,40 @@ body, html {
 
 <!-- About Section -->
 <div class="w3-container" style="padding:128px 16px" id="about">
-  <h3 class="w3-center">ABOUT THE COMPANY</h3>
-  <p class="w3-center w3-large">Key features of our company</p>
+  <h3 class="w3-center">ABOUT US</h3>
+  <p class="w3-center w3-large" style="width:50%; margin: auto">"Symbolically, [elm trees] represent new beginnings. Old-growth elms are traditionally found on college campuses ... [T]hese trees represent intuition and inner strength."
+    <br>-Brie Dyas
+  </p>
   <div class="w3-row-padding w3-center" style="margin-top:64px">
     <div class="w3-quarter">
-      <i class="fa fa-desktop w3-margin-bottom w3-jumbo w3-center"></i>
-      <p class="w3-large">Responsive</p>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</p>
+      <i class="fa fa-user w3-margin-bottom w3-jumbo w3-center"></i>
+      <p class="w3-large">Who we are</p>
+      <p>We are a group of rising sophomores at Carnegie Mellon University studying a variety of majors, including computer science, mechanical engineering, and business.</p>
     </div>
     <div class="w3-quarter">
       <i class="fa fa-heart w3-margin-bottom w3-jumbo"></i>
-      <p class="w3-large">Passion</p>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</p>
-    </div>
-    <div class="w3-quarter">
-      <i class="fa fa-diamond w3-margin-bottom w3-jumbo"></i>
-      <p class="w3-large">Design</p>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</p>
+      <p class="w3-large">Our Passion</p>
+      <p>Education. As college students who absolutely love our university and the opportunities that CMU provides us, we understand that education is the key to success and want to support others on their path.</p>
     </div>
     <div class="w3-quarter">
       <i class="fa fa-cog w3-margin-bottom w3-jumbo"></i>
       <p class="w3-large">Support</p>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</p>
+      <p>With the transition to online learning, we've realized it's difficult to maintain the same quality of motivation and education. We want to ensure that every student is supported and encouraged to keep learning no matter what.</p>
     </div>
+    <div class="w3-quarter">
+        <i class="fa fa-diamond w3-margin-bottom w3-jumbo"></i>
+        <p class="w3-large">Design</p>
+        <p>We've designed a platform that encourages students to keep learn about anything they want, where they want. If you're struggling, we'll provide opportunities. If you want to help, you can do it here. If you're unmotivated, look no further.</p>
+      </div>
   </div>
+</div>
+
+<!-- Features Section -->
+<div class="w3-container" style="padding:128px 16px" id="features">
+    <h3 class="w3-center">FEATURES</h3>
+    <div class="w3-row-padding" style="margin-top:64px">
+      
+    </div>
 </div>
 
 <!-- Team Section -->
@@ -159,28 +169,6 @@ body, html {
             </div>
           </div>
        </div>
-  </div>
-</div>
-
-<!-- Work Section -->
-<!-- We can replace this with fake pictures showing really happy ppl using our products-->
-<div class="w3-container" style="padding:128px 16px" id="reviews">
-  <h3 class="w3-center">REVIEWS</h3>
-  <p class="w3-center w3-large">What customers think about -insert name-</p>
-
-  <div class="w3-row-padding" style="margin-top:64px">
-    <div class="w3-col l3 m6">
-      <img src="/w3images/tech_mic.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity" alt="A microphone">
-    </div>
-    <div class="w3-col l3 m6">
-      <img src="/w3images/tech_phone.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity" alt="A phone">
-    </div>
-    <div class="w3-col l3 m6">
-      <img src="/w3images/tech_drone.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity" alt="A drone">
-    </div>
-    <div class="w3-col l3 m6">
-      <img src="/w3images/tech_sound.jpg" style="width:100%" onclick="onClick(this)" class="w3-hover-opacity" alt="Soundbox">
-    </div>
   </div>
 </div>
 
