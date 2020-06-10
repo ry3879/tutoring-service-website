@@ -70,7 +70,7 @@ body, html {
     <a href="/signup" onclick="w3_close()" class="w3-bar-item w3-button">SIGN UP</a>
 </nav>
 <div class="signupcontainer">
-    <form action="login.php">
+    <form id="signupform" action="/tryingtosignup" method="post">
         <h1> Personal Information</h1>
         <p class="w3-large">
             <label for="fname" style="width: 40%">FIRST NAME</label>
@@ -78,15 +78,15 @@ body, html {
             <label for="minitial" style="width: 5%">M.I.</label>
         </p>
         <p>
-            <input class="w3-input w3-border" type="text" id="fname" style="width: 40%; float:left">
-            <input class="w3-input w3-border" type="text" id="lname" style="width: 40%; float:left">
-            <input class="w3-input w3-border" type="text" id="minitial" style="width: 5%; float:left">
+            <input class="w3-input w3-border" type="text" id="fname" name="fname" style="width: 40%; float:left">
+            <input class="w3-input w3-border" type="text" id="lname" name="lname" style="width: 40%; float:left">
+            <input class="w3-input w3-border" type="text" id="minitial" name="minitial" style="width: 5%; float:left">
         </p>
         <p class="w3-large">
             <label for="bdate" style="width: 20%">BIRTH DATE</label>
         </p>
         <p>
-            <input class="w3-input w3-border" type="date" id="bdate" style="width: 20%; clear:left">
+            <input class="w3-input w3-border" type="date" id="bdate" name="birthday" style="width: 20%; clear:left">
         </p>
         <p class="w3-large">
             <label for="address" style="width: 40%">ADDRESS</label>
@@ -94,23 +94,23 @@ body, html {
             <label for="country" style="width: 30%">COUNTRY</label>
         </p>
         <p>
-            <input class="w3-input w3-border" type="text" id="address" style="width: 40%; float:left">
-            <input class="w3-input w3-border" type="text" id="city" style="width: 20%; float:left">
-            <input class="w3-input w3-border" type="text" id="country" style="width: 30%; float:left">
+            <input class="w3-input w3-border" type="text" id="address" name="address" style="width: 40%; float:left">
+            <input class="w3-input w3-border" type="text" id="city" name="city" style="width: 20%; float:left">
+            <input class="w3-input w3-border" type="text" id="country" name="country" style="width: 30%; float:left">
         </p>
         <br style="clear:left"><br>
         <h1>Account Details</h1>
         <p class="w3-large"><label for="email" style="clear:left">EMAIL</label></p>
-        <p><input class="w3-input w3-border" type="email" id="email" style="width: 40%; clear:left"></p>
+        <p><input class="w3-input w3-border" type="email" id="email" name="email" style="width: 40%; clear:left"></p>
 
-        <p class="w3-large"><label for="usrname" style="clear:left">USERNAME</label></p>
-        <p><input class="w3-input w3-border" type="text" id="password"style="width: 40%; clear:left"></p>
+        <p class="w3-large"><label for="username" style="clear:left">USERNAME</label></p>
+        <p><input class="w3-input w3-border" type="text" id="username" name="username" style="width: 40%; clear:left"></p>
 
         <p class="w3-large"><label for="password" style="clear:left">PASSWORD</label></p>
-        <p><input class="w3-input w3-border" type="password" id="password"style="width: 40%; clear:left"></p>
+        <p><input class="w3-input w3-border" type="password" id="password" name="password" style="width: 40%; clear:left"></p>
         
         <p class="w3-large"><label for="cpassword" style="clear:left">CONFIRM PASSWORD</label></p>
-        <p><input class="w3-input w3-border" type="password" id="cpassword"style="width: 40%; clear:left"></p>
+        <p><input class="w3-input w3-border" type="password" id="cpassword" name="cpassword" style="width: 40%; clear:left"></p>
         <br>
         <p>
             <button class="w3-button w3-black" type="submit">CREATE ACCOUNT</button>
