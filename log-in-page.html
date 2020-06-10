@@ -59,11 +59,11 @@ body, html {
 </nav>
 
 <div class="logincontainer" style="text-align:center">
-    <form action="login.php">
+    <form action="/tryingtologin" method="post">
         <p class="w3-large"><label for="username">USERNAME</label></p>
-        <p><input class="w3-input w3-border" type="text" id="username"></p>
+        <p><input class="w3-input w3-border" type="text" id="username" name="username"></p>
         <p class="w3-large"><label for="password">PASSWORD</label></p>
-        <p><input class="w3-input w3-border" type="text" id="password"></p>
+        <p><input class="w3-input w3-border" type="password" id="password" name="password"></p>
         <p>
             <button class="w3-button w3-black" type="submit">SUBMIT</button>
         </p>
