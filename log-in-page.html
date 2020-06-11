@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -46,7 +45,7 @@ body, html {
         <i class="fa fa-bars"></i>
       </a>
     </div>
-  </div>
+</div>
 
 <!-- Sidebar on small screens when clicking the menu icon -->
 <nav class="w3-sidebar w3-bar-block w3-black w3-card w3-animate-left w3-hide-medium w3-hide-large" style="display:none" id="mySidebar">
@@ -61,9 +60,9 @@ body, html {
 <div class="logincontainer" style="text-align:center">
     <form action="/tryingtologin" method="post">
         <p class="w3-large"><label for="username">USERNAME</label></p>
-        <p><input class="w3-input w3-border" type="text" id="username" name="username"></p>
+        <p><input class="w3-input w3-border" type="text" id="username" name="username" required></p>
         <p class="w3-large"><label for="password">PASSWORD</label></p>
-        <p><input class="w3-input w3-border" type="password" id="password" name="password"></p>
+        <p><input class="w3-input w3-border" type="password" id="password" name="password" required></p>
         <p>
             <button class="w3-button w3-black" type="submit">SUBMIT</button>
         </p>
