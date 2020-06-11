@@ -45,6 +45,9 @@ app.get('/login', function(req, res) {
 app.get('/signup', function(req, res) {
   res.sendFile(path.join(__dirname + '/sign-up-page.html'));
 });
+app.get('/home', function(req, res) {
+  res.sendFile(path.join(__dirname + '/landing-page.html'));
+});
 
 app.post('/tryingtosignup', function(req, res){
   request = new Request(`INSERT INTO dbo.account_details_table (username, password, fname, lname, minitial, address, city, country, email, birthday) 
