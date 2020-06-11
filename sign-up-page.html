@@ -36,6 +36,25 @@ body, html {
     margin-left: 16px;
     margin-right: 16px;
 }
+/* Add a green text color and a checkmark when the requirements are right */
+.valid {
+  color: green;
+}
+
+.valid:before {
+  position: relative;
+  content: "✔";
+}
+
+/* Add a red text color and an "x" when the requirements are wrong */
+.invalid {
+  color: red;
+}
+
+.invalid:before {
+  position: relative;
+  content: "✖";
+}
 </style>
 <body style="background-color:#add8e6">
 <!-- Navbar (sit on top) -->
@@ -107,7 +126,12 @@ body, html {
         <p><input class="w3-input w3-border" type="text" id="username" name="username" style="width: 40%; clear:left" required></p>
 
         <p class="w3-large"><label for="password" style="clear:left">PASSWORD</label></p>
-        <p><input class="w3-input w3-border" type="password" id="password" name="password" style="width: 40%; clear:left" required></p>
+        <p><input class="w3-input w3-border" type="password" id="password" name="password" style="width: 40%; clear:left; margin-bottom: 2px;"
+            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" required>
+        </p>
+        <p id="pswInfo" class="invalid" style="margin-top: 2px;">
+            Your password must contain at least one capital letter, one lowercase letter, one digit, and at least be 8 characters long
+        </p>
         
         <p class="w3-large"><label for="cpassword" style="clear:left">CONFIRM PASSWORD</label></p>
         <p><input class="w3-input w3-border" type="password" id="cpassword" name="cpassword" style="width: 40%; clear:left" required></p>
@@ -143,6 +167,26 @@ body, html {
         }
         else
             return true;
+    }
+
+    // When the user starts to type something inside the password field
+    myInput = document.getElementById("password");
+    pswInfo = document.getElementById("pswInfo");
+    myInput.onkeyup = function() {
+        //Check lowercase, uppercase, number, and length
+        var lowerCaseLetters = /[a-z]/g;
+        var upperCaseLetters = /[A-Z]/g;
+        var numbers = /[0-9]/g;
+        if(myInput.value.match(lowerCaseLetters) &&
+        myInput.value.match(upperCaseLetters) &&
+        myInput.value.match(numbers) &&
+        myInput.value.length >= 8) {  
+            pswInfo.classList.remove("invalid");
+            pswInfo.classList.add("valid");
+        } else {
+            pswInfo.classList.remove("valid");
+            pswInfo.classList.add("invalid");
+        }
     }
 </script>
 

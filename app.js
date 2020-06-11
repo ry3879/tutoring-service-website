@@ -48,15 +48,21 @@ app.get('/signup', function(req, res) {
 app.get('/home', function(req, res) {
   res.sendFile(path.join(__dirname + '/landing-page.html'));
 });
-
+app.get('/loginfailed', function(req, res) {
+  res.sendFile(path.join(__dirname + '/log-in-failed-page.html'));
+});
 app.post('/tryingtosignup', function(req, res){
   request = new Request(`INSERT INTO dbo.account_details_table (username, password, fname, lname, minitial, address, city, country, email, birthday) 
   VALUES (@username, @password, @fname, @lname, @minitial, @address, @city, @country, @email, @birthday)`, 
   function(err) {  
     if (err) {  
        console.log(err);
-       res.write("Sign Up Failed! :(");
-       res.end();}  
+       //res.write("Sign Up Failed! :(");
+       //res.end();}
+    }
+    else{
+      res.redirect("/home");
+    }  
    });
   
   request.addParameter('username', TYPES.VarChar, req.body.username);  
@@ -79,26 +85,27 @@ app.post('/tryingtosignup', function(req, res){
     });  
   });       
   connection.execSql(request);
-  res.write("Sign Up Successful! :)");
-  res.end();
+  //res.write("Sign Up Successful! :)");
+  //res.end();
   
 });
 
 app.post('/tryingtologin', function(req, res){
-  res.write("Logging in ...");
   request = new Request(`SELECT username, password FROM dbo.account_details_table
   WHERE username = @username AND password = @password`, 
   function(err,results, fields) {  
     if (err) {  
-       console.log(err);}
+       console.log(err);
+    }
     else{
       //check if there is a result that accepted :)
-      if(results==1)
-        res.write("Log in successful!");
-      else
-        res.write("Log in Failed");
+      if(results==1){
+        res.redirect('/home');
+      }
+      else{
+        res.redirect("/loginfailed");
+      }
     }
-    res.end();
    });
   request.addParameter('username', TYPES.VarChar, req.body.username);
   request.addParameter('password', TYPES.VarChar, req.body.password);     
