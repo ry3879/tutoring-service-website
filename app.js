@@ -5,7 +5,9 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use( bodyParser.json() ); 
 const mysql = require('mysql');
+const { request } = require('http');
 var Connection = require('tedious').Connection;
+app.engine('html', require('ejs').renderFile);
 
 //connect to the database
 var config = {  
@@ -20,7 +22,8 @@ var config = {
     options: {
         // If you are on Microsoft Azure, you need encryption:
         encrypt: true,
-        database: 'EduDatabase'
+        database: 'EduDatabase',
+        rowCollectionOnRequestCompletion: true
     }
 };  
 var connection = new Connection(config);  
@@ -30,7 +33,9 @@ connection.on('connect', function(err) {
 });
 
 var Request = require('tedious').Request;  
-var TYPES = require('tedious').TYPES; 
+var TYPES = require('tedious').TYPES;
+//temporarily set the user to rachely so we don't have to login every single time
+var user = "rachely";
 
 //Home page route, sends the home-page.html file
 app.get('/', function(req, res) {
@@ -45,53 +50,63 @@ app.get('/login', function(req, res) {
 app.get('/signup', function(req, res) {
   res.sendFile(path.join(__dirname + '/sign-up-page.html'));
 });
+
 app.get('/home', function(req, res) {
-  res.sendFile(path.join(__dirname + '/landing-page.html'));
+  //send username to the html page so that we can do use the username to get data
+  //By using render, we are using ejs, which let's us send stuff with html
+  //in this case, we are passing a variable called username to the file, which we can then get
+  if(user == "")
+    res.redirect('/login');
+  res.render(__dirname + '/landing-page.html', {username:user});
 });
+
+app.get('/profile', function(req, res) {
+  if(user == "")
+    res.redirect('/login');
+  res.render(__dirname + '/profile-page.html', {username:user});
+});
+
 app.get('/loginfailed', function(req, res) {
-  res.sendFile(path.join(__dirname + '/log-in-failed-page.html'));
+  es.sendFile(path.join(__dirname + '/log-in-failed-page.html'));
 });
+
 app.post('/tryingtosignup', function(req, res){
-  request = new Request(`INSERT INTO dbo.account_details_table (username, password, fname, lname, minitial, address, city, country, email, birthday) 
+  var request1 = new Request(`INSERT INTO dbo.account_details_table (username, password, fname, lname, minitial, address, city, country, email, birthday) 
   VALUES (@username, @password, @fname, @lname, @minitial, @address, @city, @country, @email, @birthday)`, 
   function(err) {  
     if (err) {  
        console.log(err);
-       //res.write("Sign Up Failed! :(");
-       //res.end();}
-    }
-    else{
-      res.redirect("/home");
-    }  
+    } 
    });
   
-  request.addParameter('username', TYPES.VarChar, req.body.username);  
-  request.addParameter('password', TYPES.VarChar, req.body.password);  
-  request.addParameter('fname', TYPES.VarChar, req.body.fname);  
-  request.addParameter('lname', TYPES.VarChar, req.body.lname);
-  request.addParameter('minitial', TYPES.NChar, req.body.minitial);
-  request.addParameter('address', TYPES.VarChar, req.body.address);
-  request.addParameter('city', TYPES.VarChar, req.body.city);
-  request.addParameter('country', TYPES.VarChar, req.body.country);
-  request.addParameter('email', TYPES.VarChar, req.body.email);
-  request.addParameter('birthday', TYPES.Date, req.body.birthday);  
-  request.on('row', function(columns) {  
-    columns.forEach(function(column) {  
-      if (column.value === null) {  
-        console.log('NULL');  
-      } else {  
-        console.log("id of inserted item is " + column.value);  
-      }  
-    });  
-  });       
-  connection.execSql(request);
-  //res.write("Sign Up Successful! :)");
-  //res.end();
+  request1.addParameter('username', TYPES.VarChar, req.body.username);  
+  request1.addParameter('password', TYPES.VarChar, req.body.password);  
+  request1.addParameter('fname', TYPES.VarChar, req.body.fname);  
+  request1.addParameter('lname', TYPES.VarChar, req.body.lname);
+  request1.addParameter('minitial', TYPES.NChar, req.body.minitial);
+  request1.addParameter('address', TYPES.VarChar, req.body.address);
+  request1.addParameter('city', TYPES.VarChar, req.body.city);
+  request1.addParameter('country', TYPES.VarChar, req.body.country);
+  request1.addParameter('email', TYPES.VarChar, req.body.email);
+  request1.addParameter('birthday', TYPES.Date, req.body.birthday);        
+  connection.execSql(request1);
+  var profile = new Request(`INSERT INTO dbo.profile_table (username) VALUES (@username)`, 
+  function(err){
+    if(err){
+      console.log(err);
+    }
+    else{
+      user = req.body.username;
+      res.redirect("/home");
+    }
+  });
   
+  profile.addParameter('username', TYPES.VarChar, req.body.username);
+  connection.execSql(profile);
 });
 
 app.post('/tryingtologin', function(req, res){
-  request = new Request(`SELECT username, password FROM dbo.account_details_table
+  var login = new Request(`SELECT username, password FROM dbo.account_details_table
   WHERE username = @username AND password = @password`, 
   function(err,results, fields) {  
     if (err) {  
@@ -100,6 +115,7 @@ app.post('/tryingtologin', function(req, res){
     else{
       //check if there is a result that accepted :)
       if(results==1){
+        user = req.body.username;
         res.redirect('/home');
       }
       else{
@@ -107,9 +123,57 @@ app.post('/tryingtologin', function(req, res){
       }
     }
    });
-  request.addParameter('username', TYPES.VarChar, req.body.username);
-  request.addParameter('password', TYPES.VarChar, req.body.password);     
-  connection.execSql(request);
+  login.addParameter('username', TYPES.VarChar, req.body.username);
+  login.addParameter('password', TYPES.VarChar, req.body.password);     
+  connection.execSql(login);
+});
+
+app.get('/getprofile', function(req,res){
+  var profileArray = [];
+  var subjectArray = [];
+  var profile = new Request(`SELECT bio, eduLevel FROM dbo.profile_table WHERE username = @username`,
+  function(err, rowCount, rows){
+    if(err){
+      console.log(err);
+    }
+    
+  });
+  profile.addParameter('username', TYPES.VarChar, user);
+
+  profile.on('row', function(columns) {
+    console.log("reached row, profile");
+    var rowObject ={};
+    columns.forEach(function(column) {
+        rowObject[column.metadata.colName] = column.value;
+        console.log(column.metadata.colName + " " + column.value);
+    });
+    profileArray.push(rowObject);
+
+  });
+
+  profile.on('requestCompleted', function(){
+    var subjects = new Request("SELECT * FROM dbo." + user + "_subject_table",
+      function(err, rowCount, rows){
+        if(err){
+          console.log(err);
+        }
+    });
+    subjects.on('row', function(columns) {
+      console.log("reached row, subjects")
+      var rowObject ={};
+      columns.forEach(function(column) {
+          rowObject[column.metadata.colName] = column.value;
+      });
+      subjectArray.push(rowObject);
+  
+    });
+    subjects.on('requestCompleted', function(){
+      res.json({status:200, profile:profileArray, table:subjectArray, message:"success"});
+    });
+    connection.execSql(subjects);
+
+  });
+  connection.execSql(profile);
 });
 
 //All image files will go under public/images

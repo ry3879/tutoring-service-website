@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<title>ELM | My Profile </title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<style>
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.topnav {
+  overflow: hidden;
+  background-color: #333;
+}
+
+.topnav a {
+  float: right;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: #add8e6;
+  color: white;
+  float:left;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  text-align: left;
+  padding: 8px;
+}
+</style>
+<body>
+    <div class="topnav">
+        <a class="active" href="/home">ELM</a>
+        <!-- We need to actually create pages for educate, learn, motivate-->
+        <a href="/profile"><i class="fa fa-user"></i> Profile</a>
+        <a href="/motivate">Motivate</a>
+        <a href="/learn">Learn</a>
+        <a href="/educate">Educate</a>
+    </div>
+    <div style="margin-top: 50px; width:70%; margin:auto; margin-bottom:25px">
+        <p id="Profile" style="font-size:xx-large">Profile</p><br>
+        <!-- Add stuff so that we can have the user icon at the top left, and then
+        have username and education level on the right hand side. We can then have bio directly underneath,
+        rating, and hours-->
+        <p style="font-size: large;">Username:</p>
+        <p id="username" style="font-size:medium"></p><br>
+        <p style="font-size: large;">Education Level:</p>
+        <p id="eduLevel" style="font-size:medium"></p><br>
+        <p style="font-size: large;">Bio:</p>
+        <p id="bio" style="font-size:medium"></p><br>
+        <p style="font-size: large;">My subjects:</p>
+        
+        <table id="subject_table">
+            <thead>
+                <tr>
+                    <th>Subject</th>  
+                    <th>Rating</th>  
+                    <th>Hours</th> 
+                </tr>
+            </thead>
+        </table>
+    </div>
+</body>
+
+<script>
+var username = "<%= username %>";
+document.getElementById("username").innerHTML = username;
+var tableHTML = document.getElementById("subject_table").innerHTML;
+
+//once the document is ready, use ajax and jquery to get the data
+//from the node js side, which handles /getprofile, will execute the query and send it back
+$(document).ready(function(){
+    $.ajax({
+        type: "GET",
+        url: "/getprofile",
+        datatype: JSON,
+        success: function(response){
+            //get the response, and from the response get the data and
+            //put the response into the appropriate fields
+            var res = JSON.parse(JSON.stringify(response));
+            document.getElementById("bio").innerHTML = res.profile[0].bio;
+            document.getElementById("eduLevel").innerHTML = res.profile[0].eduLevel;
+
+            //we grabbed the html of the table earlier, now create the html so that we can put it there
+            for(i = 0; i < res.table.length; i++){
+                tableHTML += "<tr>";
+                tableHTML += "<td>" + res.table[i].Subject + "</td>";
+                tableHTML += "<td>" + res.table[i].Rating + "</td>";
+                tableHTML += "<td>" + res.table[i].Hours + "</td>";
+                tableHTML += "</tr>";
+            }
+            document.getElementById("subject_table").innerHTML = tableHTML;
+        }
+    });
+});
+
+
+</script>
+</html>

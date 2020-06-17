@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<title>ELM | Home </title>
 <html>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -43,9 +44,16 @@ body {
         <a href="/learn">Learn</a>
         <a href="/educate">Educate</a>
     </div>
+    <div style="margin-top: 50px">
+    <p id="welcome" style="font-size:large"></p>
+  </div>
 </body>
 
 <script>
+var username = "<%= username %>";
+document.getElementById("welcome").innerHTML = "Welcome to ELM, " + username + "!";
+
+//do ajax to send data to a link, node js will handle it, and then use ajax to get the response back
 
 </script>
 </html>
