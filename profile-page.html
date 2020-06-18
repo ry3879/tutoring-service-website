@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
+<head>
 <title>ELM | My Profile </title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<head>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-</head>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/3.5.0/jquery.min.js"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <style>
 body {
   margin: 0;
@@ -38,6 +38,16 @@ body {
   float:left;
 }
 
+.box{
+  width: 70%;
+  margin:auto;
+  background-color: white;
+  font-size: medium;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: inset 0 0 3px grey;
+}
+
 table {
   border-collapse: collapse;
   width: 100%;
@@ -47,8 +57,32 @@ td, th {
   text-align: left;
   padding: 8px;
 }
+/*make the stars orange*/
+.checked {
+  color: orange;
+}
+
+.button{
+  background-color: rgb(115, 176, 255);
+  float:right;
+  color: white;
+  border-color: rgb(93, 163, 253);
+}
+.button:hover{
+  /*change the background color when you hover over the button*/
+  background-color:rgb(93, 163, 253);
+}
+input{
+  width: 95%;
+  padding: 6px;
+  margin: auto;
+}
+
+
+
 </style>
-<body>
+</head>
+<body style="background-color: whitesmoke;">
     <div class="topnav">
         <a class="active" href="/home">ELM</a>
         <!-- We need to actually create pages for educate, learn, motivate-->
@@ -57,17 +91,27 @@ td, th {
         <a href="/learn">Learn</a>
         <a href="/educate">Educate</a>
     </div>
-    <div style="margin-top: 50px; width:70%; margin:auto; margin-bottom:25px">
+    <div class = "box" style="margin-top: 25px">
         <p id="Profile" style="font-size:xx-large">Profile</p><br>
         <!-- Add stuff so that we can have the user icon at the top left, and then
         have username and education level on the right hand side. We can then have bio directly underneath,
         rating, and hours-->
         <p style="font-size: large;">Username:</p>
-        <p id="username" style="font-size:medium"></p><br>
+        <p id="username"></p><br>
         <p style="font-size: large;">Education Level:</p>
-        <p id="eduLevel" style="font-size:medium"></p><br>
+        <p id="eduLevel"></p><br>
+        <button class="button" id="eduButton" onclick="changeEduLevel()"><i class="fa fa-pencil" aria-hidden="true"> Edit Education Level</i>
+        </button>
+        
+    </div>
+    <br>
+    <div class="box">
         <p style="font-size: large;">Bio:</p>
-        <p id="bio" style="font-size:medium"></p><br>
+        <p id="bio"></p><br>
+        <button class="button" id="bioButton" onclick="changeBio()"><i class="fa fa-pencil" aria-hidden="true"></i> Edit Bio</button>
+    </div>
+    <br>
+    <div class="box" style="margin-bottom: 25px;">
         <p style="font-size: large;">My subjects:</p>
         
         <table id="subject_table">
@@ -79,18 +123,20 @@ td, th {
                 </tr>
             </thead>
         </table>
-    </div>
-</body>
 
-<script>
+        <button class="button"><i class="fa fa-pencil" aria-hidden="true">Edit Subjects</i>
+    </div>
+  </div>
+</body>
+<script> 
 var username = "<%= username %>";
 document.getElementById("username").innerHTML = username;
 var tableHTML = document.getElementById("subject_table").innerHTML;
-
+var $jquery3_5_1 = jQuery.noConflict();
 //once the document is ready, use ajax and jquery to get the data
 //from the node js side, which handles /getprofile, will execute the query and send it back
 $(document).ready(function(){
-    $.ajax({
+  $.ajax({
         type: "GET",
         url: "/getprofile",
         datatype: JSON,
@@ -105,7 +151,22 @@ $(document).ready(function(){
             for(i = 0; i < res.table.length; i++){
                 tableHTML += "<tr>";
                 tableHTML += "<td>" + res.table[i].Subject + "</td>";
-                tableHTML += "<td>" + res.table[i].Rating + "</td>";
+                var rating = res.table[i].Rating; 
+                tableHTML += "<td>";
+                var j = 0
+                while(j < Math.floor(rating)){
+                    tableHTML += "<span class=\"fa fa-star checked\"></span>"
+                    j+=1;
+                }
+                if(rating > Math.floor(rating) && j < 5){
+                    tableHTML += "<span class=\"fa fa-star-half-o checked\"></span>"
+                    j+=1;
+                }
+                while(j < 5){
+                    tableHTML += "<span class=\"fa fa-star-o\"></span>"
+                    j+=1;
+                }
+                tableHTML += " (" + rating + ")</td>";
                 tableHTML += "<td>" + res.table[i].Hours + "</td>";
                 tableHTML += "</tr>";
             }
@@ -114,6 +175,69 @@ $(document).ready(function(){
     });
 });
 
+//Bio button stuff
+//when false, button will be edit button
+//when true, button will be save button
+var editBio = false;
 
+function changeBio(){
+  //when you press edit
+  if(!editBio){
+    editBio = true;
+    //Chnage button to a save changes button
+    document.getElementById("bioButton").innerHTML = "Save Changes";
+    //change the p to an input type and put the current bio there
+    var text = document.getElementById("bio").innerHTML;
+    document.getElementById("bio").innerHTML = "<input type=\"text\" id=\"bioInput\">";
+    document.getElementById("bioInput").value = text;
+    
+  }
+  else{ //when you press save
+    editBio = false;
+    //set button back to edit
+    document.getElementById("bioButton").innerHTML = "<i class=\"fa fa-pencil\" aria-hidden=\"true\"></i> Edit Bio";
+    //now get the new bio
+    var text = document.getElementById("bioInput").value;
+    //do a jquery so that we can update the table
+    
+    $jquery3_5_1.ajax({
+      type: "POST",
+      url: "/updateBio",
+      data: JSON.stringify({bio:text}),
+      contentType: "application/json"
+    });
+    
+    document.getElementById("bio").innerHTML = text;
+  }
+  
+}
+
+var editEducation = false;
+
+function changeEduLevel(){
+  //if want to edit
+  if(!editEducation){
+    editEducation = true;
+    document.getElementById("eduButton").innerHTML = "Save Changes";
+    var text = document.getElementById("eduLevel").innerHTML;
+    document.getElementById("eduLevel").innerHTML = "<input type=\"text\" id=\"eduInput\">";
+    document.getElementById("eduInput").value = text;
+  }
+  else{ //if want to save
+    editEducation = false;
+    document.getElementById("eduButton").innerHTML = "<i class=\"fa fa-pencil\" aria-hidden=\"true\"></i> Edit Education Level";
+    var text = document.getElementById("eduInput").value;
+    //do a jquery so that we can update the table
+    $jquery3_5_1.ajax({
+      type: "POST",
+      url: "/updateEdu",
+      data: JSON.stringify({edu:text}),
+      contentType: "application/json"
+    });
+    
+    document.getElementById("eduLevel").innerHTML = text;
+
+  }
+}
 </script>
 </html>

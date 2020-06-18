@@ -176,6 +176,26 @@ app.get('/getprofile', function(req,res){
   connection.execSql(profile);
 });
 
+app.post("/updateBio", function(req,res){
+  var obj = req.body;
+  var updateBio = new Request("UPDATE dbo.profile_table SET bio = \'" + obj.bio + "\' WHERE username = @username",
+  function(err){
+    console.log(err);
+  }); 
+  updateBio.addParameter('username', TYPES.VarChar, user);
+  connection.execSql(updateBio);
+});
+app.post("/updateEdu", function(req,res){
+  var obj = req.body;
+  var updateBio = new Request("UPDATE dbo.profile_table SET eduLevel = \'" + obj.edu + "\' WHERE username = @username",
+  function(err){
+    console.log(err);
+  }); 
+  updateBio.addParameter('username', TYPES.VarChar, user);
+  connection.execSql(updateBio);
+});
+
+
 //All image files will go under public/images
 app.use(express.static('public'));
 
