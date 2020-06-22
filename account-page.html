@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<title>ELM | Home </title>
 <html>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ELM | Account </title>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
 body {
@@ -75,35 +75,23 @@ body {
 
 .dropdown:hover .dropdown-content {
   display: block;
-}  
-
+} 
 </style>
 <body>
-    <div class="topnav">
-        <a class="active" href="/home">ELM</a>
-        <!-- We need to actually create pages for educate, learn, motivate-->
-          <!--<a class="dropdown" href="/profile"><i class="fa fa-user"></i> Profile</a>-->
-        <div class="dropdown" style="float:right; margin-right:5px">
-          <button class="dropbtn" onclick="location.href='/profile'" style=" padding-right:30px"><i class="fa fa-user"></i> Profile</button>
-          <div class="dropdown-content">
-            <a href="/account">Account</a>
-            <a href="/signout">Sign Out</a>
-          </div>
-        </div> 
-        <a href="/motivate">Motivate</a>
-        <a href="/learn">Learn</a>
-        <a href="/educate">Educate</a>
-    </div>
-    <div style="margin-top: 50px">
-    <p id="welcome" style="font-size:large"></p>
+  <div class="topnav">
+    <a class="active" href="/home">ELM</a>
+    <!-- We need to actually create pages for educate, learn, motivate-->
+      <!--<a class="dropdown" href="/profile"><i class="fa fa-user"></i> Profile</a>-->
+    <div class="dropdown" style="float:right; margin-right:5px">
+      <button class="dropbtn" onclick="location.href='/profile'" style=" padding-right:30px"><i class="fa fa-user"></i> Profile</button>
+      <div class="dropdown-content">
+        <a href="/account">Account</a>
+        <a href="/signout">Sign Out</a>
+      </div>
+    </div> 
+    <a href="/motivate">Motivate</a>
+    <a href="/learn">Learn</a>
+    <a href="/educate">Educate</a>
   </div>
 </body>
-
-<script>
-var username = "<%= username %>";
-document.getElementById("welcome").innerHTML = "Welcome to ELM, " + username + "!";
-
-//do ajax to send data to a link, node js will handle it, and then use ajax to get the response back
-
-</script>
 </html>

@@ -44,10 +44,14 @@ app.get('/', function(req, res) {
 });
 
 app.get('/login', function(req, res) {
+  if(!(user===""))
+    res.redirect("/home");
   res.sendFile(path.join(__dirname + '/log-in-page.html'));
 });
 
 app.get('/signup', function(req, res) {
+  if(!(user===""))
+    res.redirect("/home");
   res.sendFile(path.join(__dirname + '/sign-up-page.html'));
 });
 
@@ -68,6 +72,15 @@ app.get('/profile', function(req, res) {
 
 app.get('/loginfailed', function(req, res) {
   res.sendFile(path.join(__dirname + '/log-in-failed-page.html'));
+});
+app.get('/account', function(req,res){
+  if(user === "")
+    res.redirect('/login');
+  res.sendFile(path.join(__dirname + '/account-page.html'));
+});
+app.get('/signout', function(req,res){
+  user = "";
+  res.redirect("/login");
 });
 
 app.post('/tryingtosignup', function(req, res){
