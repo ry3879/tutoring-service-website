@@ -67,7 +67,7 @@ app.get('/profile', function(req, res) {
 });
 
 app.get('/loginfailed', function(req, res) {
-  es.sendFile(path.join(__dirname + '/log-in-failed-page.html'));
+  res.sendFile(path.join(__dirname + '/log-in-failed-page.html'));
 });
 
 app.post('/tryingtosignup', function(req, res){
@@ -141,11 +141,9 @@ app.get('/getprofile', function(req,res){
   profile.addParameter('username', TYPES.VarChar, user);
 
   profile.on('row', function(columns) {
-    console.log("reached row, profile");
     var rowObject ={};
     columns.forEach(function(column) {
         rowObject[column.metadata.colName] = column.value;
-        console.log(column.metadata.colName + " " + column.value);
     });
     profileArray.push(rowObject);
 
@@ -159,7 +157,6 @@ app.get('/getprofile', function(req,res){
         }
     });
     subjects.on('row', function(columns) {
-      console.log("reached row, subjects")
       var rowObject ={};
       columns.forEach(function(column) {
           rowObject[column.metadata.colName] = column.value;
@@ -193,6 +190,61 @@ app.post("/updateEdu", function(req,res){
   }); 
   updateBio.addParameter('username', TYPES.VarChar, user);
   connection.execSql(updateBio);
+});
+app.post("/removeSubject", function(req,res){
+  var obj = req.body;
+  var subjectArray = [];
+  var updateSubject = new Request("DELETE FROM dbo."+user+"_subject_table WHERE Subject = @subject",
+  function(err){
+    console.log(err);
+  }); 
+  updateSubject.addParameter('subject', TYPES.VarChar, obj.subject);
+
+  updateSubject.on('requestCompleted', function(){
+    var getTable = new Request("SELECT * FROM dbo."+user+"_subject_table",
+    function(err){
+      console.log(err);
+    });
+    getTable.on('row', function(columns) {
+      var rowObject ={};
+      columns.forEach(function(column) {
+          rowObject[column.metadata.colName] = column.value;
+      });
+      subjectArray.push(rowObject);
+    });
+    getTable.on('requestCompleted', function(){
+      res.json({status:200, table:subjectArray, message:"success"});
+    });
+    connection.execSql(getTable);
+  });
+  connection.execSql(updateSubject);
+});
+app.post("/addSubject", function(req,res){
+  var obj = req.body;
+  var subjectArray = [];
+  var updateSubject = new Request("INSERT INTO dbo."+user+"_subject_table (Subject, Hours) VALUES (@subject, 0.0)",
+  function(err){
+    console.log(err);
+  }); 
+  updateSubject.addParameter('subject', TYPES.VarChar, obj.subject);
+  updateSubject.on('requestCompleted', function(){
+    var getTable = new Request("SELECT * FROM dbo."+user+"_subject_table",
+    function(err){
+      console.log(err);
+    });
+    getTable.on('row', function(columns) {
+      var rowObject ={};
+      columns.forEach(function(column) {
+          rowObject[column.metadata.colName] = column.value;
+      });
+      subjectArray.push(rowObject);
+    });
+    getTable.on('requestCompleted', function(){
+      res.json({status:200, table:subjectArray, message:"success"});
+    });
+    connection.execSql(getTable);
+  });
+  connection.execSql(updateSubject);
 });
 
 
