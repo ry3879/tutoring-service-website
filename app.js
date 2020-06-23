@@ -7,7 +7,15 @@ app.use( bodyParser.json() );
 const mysql = require('mysql');
 const { request } = require('http');
 var Connection = require('tedious').Connection;
+var Request = require('tedious').Request;
+const passport = require('passport');
+var TYPES = require('tedious').TYPES;
 app.engine('html', require('ejs').renderFile);
+const session = require('express-session');
+const { ensureAuthenticated, forwardAuthenticated } = require('./config/auth');
+
+//Passport config
+require('./config/passport')(passport);
 
 //connect to the database
 var config = {  
@@ -32,54 +40,55 @@ connection.on('connect', function(err) {
     console.log("Connected");  
 });
 
-var Request = require('tedious').Request;  
-var TYPES = require('tedious').TYPES;
-//temporarily set the user to rachely so we don't have to login every single time
-var user = "rachely";
+// Express session
+app.use(
+  session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
+  })
+);
 
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+//temporarily set the user to rachely so we don't have to login every single time
 //Home page route, sends the home-page.html file
 app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname + '/home-page.html'));
   //__dirname is a keyword for the folder your project is located in
 });
 
-app.get('/login', function(req, res) {
-  if(!(user===""))
-    res.redirect("/home");
+app.get('/login', forwardAuthenticated, function(req, res) {
   res.sendFile(path.join(__dirname + '/log-in-page.html'));
 });
 
-app.get('/signup', function(req, res) {
-  if(!(user===""))
-    res.redirect("/home");
+app.get('/signup', forwardAuthenticated, function(req, res) {
   res.sendFile(path.join(__dirname + '/sign-up-page.html'));
 });
 
-app.get('/home', function(req, res) {
+app.get('/home', ensureAuthenticated, function(req, res) {
+  //console.log(req);
+  console.log(req.userusername);
   //send username to the html page so that we can do use the username to get data
   //By using render, we are using ejs, which let's us send stuff with html
   //in this case, we are passing a variable called username to the file, which we can then get
-  if(user == "")
-    res.redirect('/login');
-  res.render(__dirname + '/landing-page.html', {username:user});
+  res.render(__dirname + '/landing-page.html', {username:req.user.username});
 });
 
-app.get('/profile', function(req, res) {
-  if(user == "")
-    res.redirect('/login');
-  res.render(__dirname + '/profile-page.html', {username:user});
+app.get('/profile', ensureAuthenticated, function(req, res) {
+  res.render(__dirname + '/profile-page.html', {username:req.user.username});
 });
 
-app.get('/loginfailed', function(req, res) {
+app.get('/loginfailed', forwardAuthenticated, function(req, res) {
   res.sendFile(path.join(__dirname + '/log-in-failed-page.html'));
 });
-app.get('/account', function(req,res){
-  if(user === "")
-    res.redirect('/login');
+app.get('/account', ensureAuthenticated, function(req,res){
   res.sendFile(path.join(__dirname + '/account-page.html'));
 });
 app.get('/signout', function(req,res){
-  user = "";
+  req.logout();
   res.redirect("/login");
 });
 
@@ -109,8 +118,7 @@ app.post('/tryingtosignup', function(req, res){
       console.log(err);
     }
     else{
-      user = req.body.username;
-      res.redirect("/home");
+      res.redirect("/login");
     }
   });
   
@@ -118,27 +126,11 @@ app.post('/tryingtosignup', function(req, res){
   connection.execSql(profile);
 });
 
-app.post('/tryingtologin', function(req, res){
-  var login = new Request(`SELECT username, password FROM dbo.account_details_table
-  WHERE username = @username AND password = @password`, 
-  function(err,results, fields) {  
-    if (err) {  
-       console.log(err);
-    }
-    else{
-      //check if there is a result that accepted :)
-      if(results==1){
-        user = req.body.username;
-        res.redirect('/home');
-      }
-      else{
-        res.redirect("/loginfailed");
-      }
-    }
-   });
-  login.addParameter('username', TYPES.VarChar, req.body.username);
-  login.addParameter('password', TYPES.VarChar, req.body.password);     
-  connection.execSql(login);
+app.post('/tryingtologin', function(req, res, next){
+  passport.authenticate('local', {
+    successRedirect: '/home',
+    failureRedirect: '/loginfailed'
+  })(req, res, next);
 });
 
 app.get('/getprofile', function(req,res){
@@ -151,7 +143,7 @@ app.get('/getprofile', function(req,res){
     }
     
   });
-  profile.addParameter('username', TYPES.VarChar, user);
+  profile.addParameter('username', TYPES.VarChar, req.user.username);
 
   profile.on('row', function(columns) {
     var rowObject ={};
@@ -163,7 +155,7 @@ app.get('/getprofile', function(req,res){
   });
 
   profile.on('requestCompleted', function(){
-    var subjects = new Request("SELECT * FROM dbo." + user + "_subject_table",
+    var subjects = new Request("SELECT * FROM dbo." + req.user.username + "_subject_table",
       function(err, rowCount, rows){
         if(err){
           console.log(err);
@@ -192,7 +184,7 @@ app.post("/updateBio", function(req,res){
   function(err){
     console.log(err);
   }); 
-  updateBio.addParameter('username', TYPES.VarChar, user);
+  updateBio.addParameter('username', TYPES.VarChar, req.user.username);
   connection.execSql(updateBio);
 });
 app.post("/updateEdu", function(req,res){
@@ -201,20 +193,20 @@ app.post("/updateEdu", function(req,res){
   function(err){
     console.log(err);
   }); 
-  updateBio.addParameter('username', TYPES.VarChar, user);
+  updateBio.addParameter('username', TYPES.VarChar, req.user.username);
   connection.execSql(updateBio);
 });
 app.post("/removeSubject", function(req,res){
   var obj = req.body;
   var subjectArray = [];
-  var updateSubject = new Request("DELETE FROM dbo."+user+"_subject_table WHERE Subject = @subject",
+  var updateSubject = new Request("DELETE FROM dbo."+req.user.username+"_subject_table WHERE Subject = @subject",
   function(err){
     console.log(err);
   }); 
   updateSubject.addParameter('subject', TYPES.VarChar, obj.subject);
 
   updateSubject.on('requestCompleted', function(){
-    var getTable = new Request("SELECT * FROM dbo."+user+"_subject_table",
+    var getTable = new Request("SELECT * FROM dbo."+req.user.username+"_subject_table",
     function(err){
       console.log(err);
     });
@@ -235,13 +227,13 @@ app.post("/removeSubject", function(req,res){
 app.post("/addSubject", function(req,res){
   var obj = req.body;
   var subjectArray = [];
-  var updateSubject = new Request("INSERT INTO dbo."+user+"_subject_table (Subject, Hours) VALUES (@subject, 0.0)",
+  var updateSubject = new Request("INSERT INTO dbo."+req.user.username+"_subject_table (Subject, Hours) VALUES (@subject, 0.0)",
   function(err){
     console.log(err);
   }); 
   updateSubject.addParameter('subject', TYPES.VarChar, obj.subject);
   updateSubject.on('requestCompleted', function(){
-    var getTable = new Request("SELECT * FROM dbo."+user+"_subject_table",
+    var getTable = new Request("SELECT * FROM dbo."+req.user.username+"_subject_table",
     function(err){
       console.log(err);
     });
