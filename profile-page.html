@@ -247,7 +247,7 @@ var $jquery3_5_1 = jQuery.noConflict();
 $(document).ready(function(){
   $.ajax({
         type: "GET",
-        url: "/getprofile",
+        url: "/profile/getprofile",
         datatype: JSON,
         success: function(response){
             //get the response, and from the response get the data and
@@ -322,7 +322,7 @@ function changeBio(){
     
     $jquery3_5_1.ajax({
       type: "POST",
-      url: "/updateBio",
+      url: "/profile/updateBio",
       data: JSON.stringify({bio:text}),
       contentType: "application/json"
     });
@@ -350,7 +350,7 @@ function changeEduLevel(){
     //do a jquery so that we can update the table
     $jquery3_5_1.ajax({
       type: "POST",
-      url: "/updateEdu",
+      url: "/profile/updateEdu",
       data: JSON.stringify({edu:text}),
       contentType: "application/json"
     });
@@ -389,7 +389,7 @@ function remove(choice){
   if(choice === "delete"){
     $jquery3_5_1.ajax({
       type: "POST",
-      url: "/removeSubject",
+      url: "/profile/removeSubject",
       data: JSON.stringify({subject:subj}),
       contentType: "application/json",
       success: function(res){
@@ -410,7 +410,7 @@ function add(){
 
   $jquery3_5_1.ajax({
       type: "POST",
-      url: "/addSubject",
+      url: "/profile/addSubject",
       data: JSON.stringify({subject:subject}),
       contentType: "application/json",
       success: function(res){

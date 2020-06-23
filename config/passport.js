@@ -2,6 +2,7 @@ const LocalStrategy = require('passport-local').Strategy;
 var Connection = require('tedious').Connection;
 var Request = require('tedious').Request;  
 var TYPES = require('tedious').TYPES;
+const bcrypt = require('bcryptjs');
 
 //connect to the database
 var config = {  
@@ -17,7 +18,8 @@ var config = {
         // If you are on Microsoft Azure, you need encryption:
         encrypt: true,
         database: 'EduDatabase',
-        rowCollectionOnRequestCompletion: true
+        rowCollectionOnRequestCompletion: true,
+        rowCollectionOnDone: true
     }
 };  
 var connection = new Connection(config);  
@@ -26,23 +28,28 @@ module.exports = function(passport) {
   passport.use(
     new LocalStrategy({ usernameField: 'username' }, (username, password, done) => {
         var login = new Request(`SELECT username, password FROM dbo.account_details_table
-        WHERE username = @username AND password = @password`, 
+        WHERE username = @username`, 
         function(err,results, fields) {  
           if (err) {  
              console.log(err);
           }
-          else{
-            //check if there is a result that accepted :)
-            if(results==1){
-              done(null, {username: username});
+        });
+        login.addParameter('username', TYPES.VarChar, username);
+        login.on('doneInProc', function(rowCount, more, rows) {
+            if(rowCount == 1){
+                bcrypt.compare(password, rows[0][1].value, (err, isMatch) => {
+                    if (err) throw err;
+                    if (isMatch) {
+                        return done(null, {username:username});
+                    } else {
+                        return done(null, false, { message: 'Password incorrect' });
+                    }
+                });
             }
             else{
-              done(null, false, {message: "Your username or password was incorrect"});
+                return done(null, false, {message: "Your username was incorrect"});
             }
-          }
-         });
-        login.addParameter('username', TYPES.VarChar, username);
-        login.addParameter('password', TYPES.VarChar, password);     
+        });
         connection.execSql(login);
     })
   );
