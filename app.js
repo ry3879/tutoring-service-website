@@ -52,7 +52,7 @@ app.get('/login', forwardAuthenticated, function(req, res) {
 });
 
 app.get('/signup', forwardAuthenticated, function(req, res) {
-  res.sendFile(path.join(__dirname + '/sign-up-page.html'));
+  res.render(path.join(__dirname + '/sign-up-page.html'));
 });
 
 app.get('/home', ensureAuthenticated, function(req, res) {
