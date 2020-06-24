@@ -29,7 +29,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Connect flash
+// Connect flash, which allows us to pass messages between sites
 app.use(flash());
 
 // Global variables
@@ -40,7 +40,6 @@ app.use(function(req, res, next) {
   next();
 });
 
-//temporarily set the user to rachely so we don't have to login every single time
 //Home page route, sends the home-page.html file
 app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname + '/home-page.html'));
@@ -81,8 +80,11 @@ app.get('/signout', function(req,res){
 
 //All image files will go under public/images
 app.use(express.static('public'));
+
+//all other routes
 app.use('/profile', require('./routes/profile.js'));
 app.use('/users', require('./routes/users.js'));
+app.use('/learn', require('./routes/learn.js'));
 
 //set the port to 3000
 var port = "3000";

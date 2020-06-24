@@ -5,11 +5,12 @@ var TYPES = require('tedious').TYPES;
 const bcrypt = require('bcryptjs');
 const connection = require('./connection');
 
+//Passport stuff to manage user authentication
+
 module.exports = function(passport) {
   passport.use(
     new LocalStrategy({ usernameField: 'username' }, (username, password, done) => {
-        var login = new Request(`SELECT username, password FROM dbo.account_details_table
-        WHERE username = @username`, 
+        var login = new Request(`SELECT username, password FROM dbo.account_details_table WHERE username = @username`, 
         function(err,results, fields) {  
           if (err) {  
              console.log(err);

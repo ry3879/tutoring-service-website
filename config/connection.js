@@ -24,4 +24,5 @@ connection.on('connect', function(err) {
     console.log("Connected");  
 });
 
+//export this connection so that we don't have to connect more than once
 module.exports = connection;

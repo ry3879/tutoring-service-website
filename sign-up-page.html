@@ -213,7 +213,8 @@ body, html {
         if(myInput.value.match(lowerCaseLetters) &&
         myInput.value.match(upperCaseLetters) &&
         myInput.value.match(numbers) &&
-        myInput.value.length >= 8) {  
+        myInput.value.length >= 8) {
+          //change the information about the password to show if its either a valid or invalid password
             pswInfo.classList.remove("invalid");
             pswInfo.classList.add("valid");
         } else {
