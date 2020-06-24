@@ -166,24 +166,38 @@ body {
         <a href="/educate">Educate</a>    
     </div>
     <br><br>
-    <% for(var i = 0; i < requests.length; i++){%>
-    <div class="card" id="<%=requests[i].ID%>Card">
-        <h3><%=requests[i].username%></h3>
-        <h4>Subject: <%=requests[i].subject%></h4>
-        <p><%=requests[i].details%></p>
-        <button class="deny" id="<%=requests[i].ID%>Deny" onclick="deny(this.id)">Deny</button>
-        <button class="accept" id = "<%=requests[i].ID%>Accept" onclick = "accept(this.id)">Accept</button>
+    <h2 style="margin-left:12%">Subjects that matched your request:</h2>
+    <div id="subjects">
+    <% for(var i = 0; i < subject.length; i++){%>
+    <div class="card" id="<%=subject[i].ID%>Card">
+        <h3><%=subject[i].username%></h3>
+        <h4>Subject: <%=subject[i].subject%></h4>
+        <p><%=subject[i].details%></p>
+        <button class="deny" id="<%=subject[i].ID%>Deny" onclick="deny(this.id)">Deny</button>
+        <button class="accept" id = "<%=subject[i].ID%>Accept" onclick = "accept(this.id)">Accept</button>
     </div>
     <%}%>
+    </div>
+    <h2 style="margin-left:12%">Users that matched your request:</h2>
+    <div id="users">
+    <% for(var i = 0; i < users.length; i++){%>
+    <div class="card" id="<%=users[i].ID%>Card">
+        <h3><%=users[i].username%></h3>
+        <h4>Subject: <%=users[i].subject%></h4>
+        <p><%=users[i].details%></p>
+        <button class="deny" id="<%=users[i].ID%>Deny" onclick="deny(this.id)">Deny</button>
+        <button class="accept" id = "<%=users[i].ID%>Accept" onclick = "accept(this.id)">Accept</button>
+    </div>
+    <%}%>
+    </div>
 
 </body>
 <script>
-
 function accept(id){
 
 }
 function deny(id){
-
+    
 }
 </script>
 </html>
