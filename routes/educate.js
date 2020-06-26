@@ -76,5 +76,86 @@ router.get("/search", ensureAuthenticated, function(req, res, next){
     connection.execSql(request);
 });
 
+router.post("/accept", function(req,res, next){
+    var obj = req.body;
+    var removeRequest = new Request('SELECT * FROM dbo.learn_requests_table WHERE ID = @id',
+    function(err){
+        if(err)
+            console.log(err);
+    });
+    removeRequest.addParameter('id', TYPES.UniqueIdentifier, obj.id);
+    var rowObject = {}
+    removeRequest.on('row', function(columns){
+        columns.forEach(function(column) {
+            rowObject[column.metadata.colName] = column.value;
+        });
+        rowArray.push(rowObject);
+    });
+    removeRequest.on('requestCompleted', function(){
+        var acceptRequest = newRequest('INSERT INTO dbo.accept_requests_table (ID, username, subject, details, accepted) VALUES (@id, @username, @subject, @details, @accepted)',
+        function(err){
+            if(err)
+                console.log(err);
+        });
+        acceptRequest.addParameter('id', TYPES.UniqueIdentifier, obj.id);
+        acceptRequest.addParameter('username', TYPES.VarChar, rowObject.username);
+        acceptRequest.addParameter('subject', TYPES.VarChar, rowObject.subject);
+        acceptRequest.addParameter('details', TYPES.VarChar, rowObject.details);
+        acceptRequest.addParameter('accepted', TYPES.VarChar, req.user.username);
+        
+        acceptRequest.on('requestCompleted', function(){
+            var remove = new Request('DELETE FROM dbo.learn_requests_table WHERE id = @id AND requested IS NOT NULL', 
+            function(err){
+                if(err)
+                    console.log(err);
+            });
+            remove.addParameter('id', TYPES.VarChar, obj.id);
+            connection.execSql(remove);
+        })
+        connection.execSql(acceptRequest);
+    });
+    connection.execSql(removeRequest);
+});
+router.post("/deny", function(req,res, next){
+    var obj = req.body;
+    var removeRequest = new Request('SELECT * FROM dbo.learn_requests_table WHERE ID = @id',
+    function(err){
+        if(err)
+            console.log(err);
+    });
+    removeRequest.addParameter('id', TYPES.UniqueIdentifier, obj.id);
+    var rowObject = {}
+    removeRequest.on('row', function(columns){
+        columns.forEach(function(column) {
+            rowObject[column.metadata.colName] = column.value;
+        });
+        rowArray.push(rowObject);
+    });
+    removeRequest.on('requestCompleted', function(){
+        var denyRequest = newRequest('INSERT INTO dbo.rejected_requests_table (ID, username, subject, details, accepted) VALUES (@id, @username, @subject, @details, @accepted)',
+        function(err){
+            if(err)
+                console.log(err);
+        });
+        denyRequest.addParameter('id', TYPES.UniqueIdentifier, obj.id);
+        denyRequest.addParameter('username', TYPES.VarChar, rowObject.username);
+        denyRequest.addParameter('subject', TYPES.VarChar, rowObject.subject);
+        denyRequest.addParameter('details', TYPES.VarChar, rowObject.details);
+        denyRequest.addParameter('accepted', TYPES.VarChar, req.user.username);
+        
+        denyRequest.on('requestCompleted', function(){
+            var remove = new Request('DELETE FROM dbo.learn_requests_table WHERE id = @id AND requested IS NOT NULL', 
+            function(err){
+                if(err)
+                    console.log(err);
+            });
+            remove.addParameter('id', TYPES.VarChar, obj.id);
+            connection.execSql(remove);
+        })
+        connection.execSql(denyRequest);
+    });
+    connection.execSql(removeRequest);
+});
+
 
 module.exports = router;
