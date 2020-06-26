@@ -27,7 +27,7 @@ router.get("/", ensureAuthenticated, function(req,res, next){
     });
     request.on('requestCompleted', function(columns){
         //console.log(subjectArray);
-        res.render(path.resolve(__dirname, "../learn-page.html"), {requests:subjectArray});
+        res.render(path.resolve(__dirname, "../educate-page.html"), {requests:subjectArray});
     });
     connection.execSql(request);
 });
@@ -69,7 +69,7 @@ router.get("/search", ensureAuthenticated, function(req, res, next){
         });
         request2.on('requestCompleted', function(){
             
-            res.render(path.resolve(__dirname, "../learn-search-page.html"), {users:userArray, subject:subjectArray});
+            res.render(path.resolve(__dirname, "../educate-search-page.html"), {users:userArray, subject:subjectArray});
         });
         connection.execSql(request2);
     });
