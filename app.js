@@ -46,7 +46,7 @@ app.get('/', function(req, res) {
   //__dirname is a keyword for the folder your project is located in
 });
 
-app.get('/login', forwardAuthenticated, function(req, res) {
+app.get('/login', forwardAuthenticated, function(req, res,next) {
   res.render(path.join(__dirname + '/log-in-page.html'));
 });
 
@@ -63,10 +63,6 @@ app.get('/home', ensureAuthenticated, function(req, res) {
 
 app.get('/profile', ensureAuthenticated, function(req, res) {
   res.render(__dirname + '/profile-page.html', {username:req.user.username});
-});
-
-app.get('/loginfailed', forwardAuthenticated, function(req, res) {
-  res.sendFile(path.join(__dirname + '/log-in-failed-page.html'));
 });
 app.get('/account', ensureAuthenticated, function(req,res){
   res.sendFile(path.join(__dirname + '/account-page.html'));

@@ -193,11 +193,32 @@ body {
 
 </body>
 <script>
-function accept(id){
-
+function accept(acceptID){
+  var index = acceptID.indexOf("Accept");
+  var id = acceptID.substring(0,index);
+  $.ajax({
+    type: "POST",
+      url: "/educate/accept",
+      data: JSON.stringify({id:id}),
+      contentType: "application/json",
+      success: function(res){
+        //add a message saying that the request has been accepted
+        document.getElementById(id+"Card").style.display = "none";
+      }
+  });
 }
-function deny(id){
-    
+function deny(denyID){
+  var index = denyID.indexOf("Deny");
+  var id = denyID.substring(0,index);
+  $.ajax({
+    type: "POST",
+      url: "/educate/deny",
+      data: JSON.stringify({id:id}),
+      contentType: "application/json",
+      success: function(res){
+        document.getElementById(id+"Card").style.display = "none";
+      }
+  });
 }
 </script>
 </html>
