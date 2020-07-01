@@ -29,7 +29,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Connect flash
+// Connect flash, which allows us to pass messages between sites
 app.use(flash());
 
 // Global variables
@@ -40,14 +40,13 @@ app.use(function(req, res, next) {
   next();
 });
 
-//temporarily set the user to rachely so we don't have to login every single time
 //Home page route, sends the home-page.html file
 app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname + '/home-page.html'));
   //__dirname is a keyword for the folder your project is located in
 });
 
-app.get('/login', forwardAuthenticated, function(req, res) {
+app.get('/login', forwardAuthenticated, function(req, res,next) {
   res.render(path.join(__dirname + '/log-in-page.html'));
 });
 
@@ -65,10 +64,6 @@ app.get('/home', ensureAuthenticated, function(req, res) {
 app.get('/profile', ensureAuthenticated, function(req, res) {
   res.render(__dirname + '/profile-page.html', {username:req.user.username});
 });
-
-app.get('/loginfailed', forwardAuthenticated, function(req, res) {
-  res.sendFile(path.join(__dirname + '/log-in-failed-page.html'));
-});
 app.get('/account', ensureAuthenticated, function(req,res){
   res.sendFile(path.join(__dirname + '/account-page.html'));
 });
@@ -81,8 +76,11 @@ app.get('/signout', function(req,res){
 
 //All image files will go under public/images
 app.use(express.static('public'));
+
+//all other routes
 app.use('/profile', require('./routes/profile.js'));
 app.use('/users', require('./routes/users.js'));
+app.use('/educate', require('./routes/educate.js'));
 
 //set the port to 3000
 var port = "3000";

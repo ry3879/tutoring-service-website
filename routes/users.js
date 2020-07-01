@@ -8,6 +8,7 @@ const passport = require('passport');
 const connection = require('../config/connection');
 
 router.post('/signup', function(req, res){
+  //first check if the username exists
   var request = new Request(`SELECT * FROM dbo.account_details_table WHERE username = @username`, function(err,rowCount, rows){
     if(err){
       console.log(err);
@@ -16,6 +17,7 @@ router.post('/signup', function(req, res){
   request.addParameter('username', TYPES.VarChar, req.body.username);
   request.on('doneInProc', function(rowCount, more, rows){
   if(rowCount==0){
+    //if username doesn't exist, encrypt the password and store everything in the table
     bcrypt.hash(req.body.password, 10, function (err, hash){
       var request1 = new Request(`INSERT INTO dbo.account_details_table (username, password, fname, lname, minitial, address, city, country, email, birthday) 
     VALUES (@username, @password, @fname, @lname, @minitial, @address, @city, @country, @email, @birthday)`, 
@@ -36,6 +38,7 @@ router.post('/signup', function(req, res){
     request1.addParameter('email', TYPES.VarChar, req.body.email);
     request1.addParameter('birthday', TYPES.Date, req.body.birthday);        
     
+    //after inserting, we want to also insert into the profile table and also create a subject table
     request1.on('requestCompleted', function(){
       var profile = new Request(`INSERT INTO dbo.profile_table (username) VALUES (@username)`, 
       function(err){
@@ -64,7 +67,7 @@ router.post('/signup', function(req, res){
     connection.execSql(request1);
     });
   }
-  else{
+  else{ //otherwise, if username exists, flash a message and redirect back to signup
     req.flash("error_msg", "That username is already taken.");
     res.redirect('/signup');
   }
@@ -72,6 +75,8 @@ router.post('/signup', function(req, res){
   connection.execSql(request);
 });
 
+//use passport to authenticate and do all the session stuff. If fails to authenticate, then redirect to login.
+//Otherwise, redirect to home page.
 router.post('/login', function(req, res, next){
   passport.authenticate('local', {
     successRedirect: '/home',

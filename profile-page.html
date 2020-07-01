@@ -86,6 +86,7 @@ body {
   background-color: white;
   font-size: medium;
   padding: 10px;
+  padding-bottom: 40px;
   border-radius: 5px;
   box-shadow: inset 0 0 3px grey;
   margin-bottom: 10px;
@@ -122,7 +123,7 @@ td, th {
   border-color: rgb(93, 163, 253);
   padding: 4px;
 }
-.btn:hover > div {
+.button:hover > div {
   /*for all buttons, when hover over it, it becomes darker (unless overriden by another)*/
   background-color:rgba(0, 0, 0, 0.1);
 }
@@ -219,13 +220,15 @@ input{
                 </tr>
             </thead>
         </table>
+        <!-- These Buttons are hidden until you choose to edit the table-->
         <button class="button" style="float:left" id="addButton" onclick="addSubject()">Add Subject</button>
-        <input style="clear:left;" id="subjectInput"></input>
-        <button class="button" style="float:left" id="addButton2" onclick="add()">Add</button><br>
+        <input style="float:left; width: 40%; margin-top: 10px; margin-left: 15%" id="subjectInput"></input>
+        <button class="button" style="float:left; padding: 6px; margin-top: 10px; margin-left:10px" id="addButton2" onclick="add()">Add</button><br>
         <button class="button" onclick="editSubject()" id="subjectButton"><i class="fa fa-pencil" aria-hidden="true">Edit Subjects</i>
 
         
     </div>
+    <!-- This is the popup that shows up to confirm if you want to delete. It's set to not be shown until needed-->
     <div class="modal" id="confirmDelete">
       <div class="modal-content">
         <p>Are you sure you want to delete this subject? This is a permanent action. 
@@ -299,7 +302,9 @@ $(document).ready(function(){
 //when false, button will be edit button
 //when true, button will be save button
 var editBio = false;
-
+/*The idea behind change bio. Once you click edit changes, change the button to a save changes button. Turn the text that
+you already had as a bio into an input with the current bio in it that they can modify. Once they save changes, turn button
+back to edit bio, retrieve input value, send query to update bio, and change the input back to text.*/
 function changeBio(){
   //when you press edit
   if(!editBio){
@@ -333,14 +338,14 @@ function changeBio(){
 }
 
 var editEducation = false;
-
+/*The idea behind change the education level is the exact same*/
 function changeEduLevel(){
   //if want to edit
   if(!editEducation){
     editEducation = true;
     document.getElementById("eduButton").innerHTML = "Save Changes";
     var text = document.getElementById("eduLevel").innerHTML;
-    document.getElementById("eduLevel").innerHTML = "<input type=\"text\" id=\"eduInput\">";
+    document.getElementById("eduLevel").innerHTML = "<input type=\"text\" id=\"eduInput\" style=\"width: 40%\">";
     document.getElementById("eduInput").value = text;
   }
   else{ //if want to save
@@ -361,16 +366,19 @@ function changeEduLevel(){
 }
 
 var editSubj = false;
-
+//Same concept but more complicated
 function editSubject(){
   if(!editSubj){
     editSubj = true;
+    //reveal the column of the table with delete buttons
     $jquery3_5_1('td:nth-child(1),th:nth-child(1)').show();
     document.getElementById("subjectButton").innerHTML = "Done";
+    //Add an Add Subject button that we had previously hidden
     document.getElementById("addButton").style.display = "block";
   }
   else{
     editSubj = false;
+    //hide the columns and all the buttons again
     $jquery3_5_1('td:nth-child(1),th:nth-child(1)').hide();
     document.getElementById("subjectButton").innerHTML = "<i class=\"fa fa-pencil\" aria-hidden=\"true\">Edit Subjects</i>";
     document.getElementById("addButton").style.display = "none";
@@ -378,12 +386,15 @@ function editSubject(){
     document.getElementById("addButton2").style.display = "none";
   }
 }
+//hold the subject that you want to remove
 var subj = "";
 function removeSubject(r){
+  //display the modal that checks if you want to delete
   document.getElementById("confirmDelete").style.display="block";
   var row = document.getElementById(r+"subject");
-  subj = row.getElementsByTagName("td")[1].innerText;
+  subj = row.getElementsByTagName("td")[1].innerText; //get the subject name from the row number
 }
+//if you confirm that you want to delete, do a query
 function remove(choice){
   document.getElementById("confirmDelete").style.display="none";
   if(choice === "delete"){
@@ -405,7 +416,7 @@ function addSubject(){
   document.getElementById("addButton2").style.display = "block";
 }
 function add(){
-  //send query :D
+  //send a query to add the subject
   var subject = document.getElementById("subjectInput").value;
 
   $jquery3_5_1.ajax({
@@ -422,10 +433,10 @@ function add(){
   document.getElementById("addButton").style.display = "block";
 }
 
+//udpate the table after we do the add and delete stuff
 function updateTable(res){
   var res = JSON.parse(JSON.stringify(res));
   var updateTableHTML = origTableHTML;
-
   //we grabbed the html of the table earlier, now create the html so that we can put it there
   for(i = 0; i < res.table.length; i++){
     updateTableHTML += "<tr id=\""+ i +"subject\">";
