@@ -224,9 +224,8 @@ body {
         <a href="/learn">Learn</a>
         <a href="/educate">Educate</a>
     </div>
-    <!-- This is ejs code that renders the flash messages that we pass to this page-->
-    <!--In this case, we'll be using it to let people know if we have successfully processed their user requests :D-->
-
+    <!--Messages stating if requests have been sent or not. Initially set to not seen,
+    and then will show based on if things work-->
     <div class="alert alert-success alert-dismissible fade show" id="success" role="alert">
       You've successfully sent your requests!
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -254,6 +253,23 @@ body {
             <label for="general"> I want to send a general request.</label><br><br>
             <button type="submit">Submit Request</button>
         </form>
+    </div>
+
+    <!--List the requests that you have already made-->
+    <div id="requests_made">
+        <h2 style="margin-left: 20%;">Your requests:</h2>
+        <%for(var i = 0; i < requests.length; i++){%>
+        <div class="card" id="<%=requests[i].ID%>Card">
+            <h4>Subject: <%=requests[i].subject%></h4>
+            <%if(requests[i].requested == null){%>
+                <h5><span style="color:blue">General </span>Request</h5>
+            <%}else{%>
+                <h5>Requested <span style="color:blue"><%=requests[i].requested%></span></h5>
+            <%}%>
+            <p><%=requests[i].details%></p>
+            <button class="deny" id="<%=requests[i].ID%>Cancel" onclick="cancelRequest(this.id)">Cancel</button>
+        </div>
+        <%}%>
     </div>
 </body>
 <script>
@@ -296,11 +312,8 @@ $('#requestForm').submit(function(event){
             document.getElementById("requestedUsers").style.display = "none";
         }
     });
-    //we return false so that the action never happens. Instead we want to process our own data
+    
 });
-//function submitRequest(){
-
-//}
 //when the key changed on input field for requested users
 $("#requested").on('keyup', function (e) {
     //if key pressed was space, add it the list of requested users
@@ -322,6 +335,19 @@ function removeUser(closeID){
     document.getElementById(cID).remove();
     //set to empty if not using
     requested[parseInt(cID)] = "";
+}
+function cancelRequest(cancelID){
+    //remove that element that we don't need. We can't just stop displaying it because the user
+    //might make a mistake and enter it again, leading to multiple elements with the same ID.
+    var index = cancelID.indexOf("Cancel");
+    var cID = cancelID.substring(0,index);
+    document.getElementById(cID+"Card").remove();
+    $jquery3_5_1.ajax({
+        type:"POST",
+        url: "/learn/cancel",
+        data: JSON.stringify({ID:cID}),
+        contentType: "application/json"
+    });
 }
 </script>
 </html>
