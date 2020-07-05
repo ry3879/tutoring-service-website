@@ -16,7 +16,7 @@ router.get("/", ensureAuthenticated, function(req,res, next){
     var request = new Request(`SELECT t1.* FROM dbo.learn_requests_table t1 
     LEFT JOIN dbo.accepted_requests_table t2 ON t1.ID = t2.ID
     LEFT JOIN dbo.rejected_requests_table t3 ON t1.ID = t3.ID
-    WHERE t2.ID IS NULL AND t3.ID IS NULL AND (t1.requested IS NULL OR t1.requested = @user)`, function(err){
+    WHERE t2.ID IS NULL AND t3.ID IS NULL AND (t1.requested IS NULL OR t1.requested = @user) AND t1.username != @user`, function(err){
         if(err)
             console.log(err);
     });
