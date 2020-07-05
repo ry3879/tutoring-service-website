@@ -109,7 +109,6 @@ body {
     background: #ccc;
 }
 
-/*Card to hold each request for tutoring, card will have accept and deny buttons*/
 .card{
     width: 50%;
     margin-left:14%;
@@ -257,7 +256,7 @@ body {
 
     <!--List the requests that you have already made-->
     <div id="requests_made">
-        <h2 style="margin-left: 20%;">Your requests:</h2>
+        <h2 style="margin-left: 15%;">Your requests:</h2>
         <%for(var i = 0; i < requests.length; i++){%>
         <div class="card" id="<%=requests[i].ID%>Card">
             <h4>Subject: <%=requests[i].subject%></h4>
@@ -268,6 +267,19 @@ body {
             <%}%>
             <p><%=requests[i].details%></p>
             <button class="deny" id="<%=requests[i].ID%>Cancel" onclick="cancelRequest(this.id)">Cancel</button>
+        </div>
+        <%}%>
+    </div>
+    <!--List the requests that you have already made-->
+    <div id="accepted_requests">
+        <h2 style="margin-left: 15%;">Accepted requests:</h2>
+        <%for(var i = 0; i < accepted.length; i++){%>
+        <div class="card" id="<%=accepted[i].ID%>Card">
+            <h3>Accepted by <span style="color:blue"><%=accepted[i].accepted%></span></h3>
+            <h4>Subject: <%=accepted[i].subject%></h4>
+            <p><%=requests[i].details%></p>
+            <button class="deny" id="<%=accepted[i].ID%>Cancel" style="float:right" onclick="cancelRequest(this.id)">Deny</button>
+            <button class="accept" id="<%=accepted[i].ID%>Accept" style="float:right" onclick="acceptRequest(this.id)">Accept</button>
         </div>
         <%}%>
     </div>
@@ -348,6 +360,9 @@ function cancelRequest(cancelID){
         data: JSON.stringify({ID:cID}),
         contentType: "application/json"
     });
+}
+function acceptRequest(acceptID){
+    alert("Accepted request")
 }
 </script>
 </html>

@@ -170,9 +170,14 @@ body {
     <div class="card" id="<%=requests[i].ID%>Card">
         <h3><%=requests[i].username%></h3>
         <h4>Subject: <%=requests[i].subject%></h4>
+        <%if(requests[i].requested == null){%>
+          <h5>General Request</h5>
+        <%} else {%>
+          <h5>Specific Request</h5>
+        <%}%>
         <p><%=requests[i].details%></p>
         <button class="deny" id="<%=requests[i].ID%>Deny" onclick="deny(this.id)">Deny</button>
-        <button class="accept" id = "<%=requests[i].ID%>Accept" onclick = "accept(this.id)">Accept</button>
+        <button class="accept" id="<%=requests[i].ID%>Accept" onclick = "accept(this.id)">Accept</button>
     </div>
     <%}%>
 

@@ -11,7 +11,7 @@ const { ensureAuthenticated, forwardAuthenticated } = require('../config/auth');
 const flash = require('connect-flash');
 
 router.get('/', ensureAuthenticated, function(req,res){
-    var request = new Request("SELECT * FROM dbo.learn_requests_table WHERE username = @user", function(err){
+    var request = new Request("SELECT * FROM dbo.learn_requests_table t1 LEFT JOIN dbo.accepted_requests_table t2 ON t1.ID = t2.ID WHERE t1.username = @user AND t2.ID IS NULL", function(err){
         if(err)
             console.log(err);
     });
@@ -25,7 +25,23 @@ router.get('/', ensureAuthenticated, function(req,res){
         requestArray.push(rowObject);
     });
     request.on("requestCompleted", function(){
-        res.render(path.resolve(__dirname, "../learn-page.html"), {requests:requestArray});
+        var request2 = new Request("SELECT * FROM dbo.accepted_requests_table t1 WHERE t1.username = @user", function(err){
+            if(err)
+                console.log(err);
+        });
+        request2.addParameter("user", TYPES.VarChar, req.user.username);
+        acceptedArray = [];
+        request2.on("row", function(columns){
+            var rowObject ={};
+            columns.forEach(function(column) {
+                rowObject[column.metadata.colName] = column.value;
+            });
+            acceptedArray.push(rowObject);  
+        });
+        request2.on("requestCompleted", function(){
+            res.render(path.resolve(__dirname, "../learn-page.html"), {requests:requestArray, accepted: acceptedArray});
+        });
+        connection.execSql(request2);
     });
     connection.execSql(request);
 });

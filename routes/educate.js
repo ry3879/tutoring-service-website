@@ -30,7 +30,6 @@ router.get("/", ensureAuthenticated, function(req,res, next){
         subjectArray.push(rowObject);
     });
     request.on('requestCompleted', function(columns){
-        //console.log(subjectArray);
         res.render(path.resolve(__dirname, "../educate-page.html"), {requests:subjectArray});
     });
     connection.execSql(request);
