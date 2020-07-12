@@ -18,16 +18,20 @@ app.set('port', port);
 /**
  * Create HTTP server.
  */
-
-var server = http.createServer(app);
+var server_module = require("../server");
+//var server = ttp.createServer(app);
+var server = new server_module.Server(app);
 
 /**
  * Listen on provided port, on all network interfaces.
  */
+server.listen(function (port) {
+  console.log("Server is listening on http://localhost:" + port);
+});
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+//real_server.listen(port);
+//server.on('error', onError);
+//server.on('listening', onListening);
 
 /**
  * Normalize a port into a number, string, or false.

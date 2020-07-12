@@ -180,21 +180,34 @@ body {
         <button class="accept" id="<%=requests[i].ID%>Accept" onclick = "accept(this.id)">Accept</button>
     </div>
     <%}%>
-
+  <!--hidden form to redirect-->
+  <form id="form" style="display:none" method="GET" action="/session/video">
+    <input type="text" name="ID">
+    <input type="text" name="requested">
+    <input type="text" name="accepted">
+    <input>
+  </form>
 </body>
 <script>
 
 function accept(acceptID){
   var index = acceptID.indexOf("Accept");
   var id = acceptID.substring(0,index);
+  //location.replace()
   $.ajax({
     type: "POST",
       url: "/educate/accept",
       data: JSON.stringify({id:id}),
       contentType: "application/json",
       success: function(res){
-        //add a message saying that the request has been accepted
-        document.getElementById(id+"Card").style.display = "none";
+        var form = document.getElementById("form");
+        if(res != null){
+          form.elements[0].value = res.ID;
+          form.elements[1].value = res.requested;
+          form.elements[2].value = res.accepted;
+          //var teachingWindow = window.open("", "_blank");
+          form.submit();
+        }
       }
   });
 
@@ -209,6 +222,7 @@ function deny(denyID){
       contentType: "application/json",
       success: function(res){
         document.getElementById(id+"Card").style.display = "none";
+        //document.getElementById("form").submit();
       }
   });
 }

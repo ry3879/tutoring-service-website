@@ -1,3 +1,5 @@
+"use strict";
+exports.__esModule = true;
 var express = require('express');
 var app = express();
 var path = require('path');
@@ -8,6 +10,7 @@ const mysql = require('mysql');
 const { request } = require('http');
 const passport = require('passport');
 const flash = require('connect-flash');
+//var server = require("./server");
 
 app.engine('html', require('ejs').renderFile);
 const session = require('express-session');
@@ -82,7 +85,9 @@ app.use('/profile', require('./routes/profile.js'));
 app.use('/users', require('./routes/users.js'));
 app.use('/learn', require('./routes/learn.js'));
 app.use('/educate', require('./routes/educate.js'));
+//app.use('/session/video', new server.Server());
 
+//var server_2 = server.Server();
 //set the port to 3000
 var port = "3000";
 app.set('port', port);

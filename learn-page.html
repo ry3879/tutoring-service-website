@@ -278,11 +278,17 @@ body {
             <h3>Accepted by <span style="color:blue"><%=accepted[i].accepted%></span></h3>
             <h4>Subject: <%=accepted[i].subject%></h4>
             <p><%=requests[i].details%></p>
-            <button class="deny" id="<%=accepted[i].ID%>Cancel" style="float:right" onclick="cancelRequest(this.id)">Deny</button>
-            <button class="accept" id="<%=accepted[i].ID%>Accept" style="float:right" onclick="acceptRequest(this.id)">Accept</button>
+            <button class="deny" id="<%=accepted[i].ID%>Reject<%=accepted[i].accepted%>" style="float:right" onclick="rejectRequest(this.id)">Deny</button>
+            <button class="accept" id="<%=accepted[i].ID%>Accept<%=accepted[i].accepted%>" style="float:right" onclick="acceptRequest(this.id)">Accept</button>
         </div>
         <%}%>
     </div>
+    <form id="form" style="display:none" method="GET" action="/session/video">
+        <input type="text" name="ID">
+        <input type="text" name="requested">
+        <input type="text" name="accepted">
+        <input>
+    </form>
 </body>
 <script>
 document.getElementById("requestedUsers").style.display="none";
@@ -353,16 +359,38 @@ function cancelRequest(cancelID){
     //might make a mistake and enter it again, leading to multiple elements with the same ID.
     var index = cancelID.indexOf("Cancel");
     var cID = cancelID.substring(0,index);
+    var user = cID.substring(index+6);
     document.getElementById(cID+"Card").remove();
     $jquery3_5_1.ajax({
         type:"POST",
         url: "/learn/cancel",
-        data: JSON.stringify({ID:cID}),
+        data: JSON.stringify({ID:cID, user: user}),
         contentType: "application/json"
     });
 }
 function acceptRequest(acceptID){
-    alert("Accepted request")
+    var index = acceptID.indexOf("Accept");
+    var aID = acceptID.substring(0,index);
+    var user = acceptID.substring(index+6);
+    $jquery3_5_1.ajax({
+        type: "POST",
+        url: "/learn/accept",
+        data: JSON.stringify({ID:aID,user:user}),
+        contentType: "application/json",
+        success: function(res){
+            var form = document.getElementById("form");
+            if(res != null){
+                form.elements[0].value = aID;
+                form.elements[1].value = res.requested;
+                form.elements[2].value = user;
+                //var teachingWindow = window.open("", "_blank");
+                form.submit();
+            }
+        }
+    })
+}
+function rejectRequest(rejectID){
+    alert("you tried to reject");
 }
 </script>
 </html>

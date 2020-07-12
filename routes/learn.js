@@ -103,4 +103,19 @@ router.post("/cancel", function(req,res){
     });
     connection.execSql(request);
 });
+router.post("/accept", function(req,res){
+    var ID = req.body.ID;
+    var user = req.body.user;
+    var queryRequest = "DELETE FROM dbo.accepted_requests_table WHERE dbo.accepted_requests_table.ID = @ID AND dbo.accepted_requests_table.accepted = @user";
+    var request = new Request(queryRequest, function(err){
+        if(err)
+            console.log(err);
+    });
+    request.addParameter("ID", TYPES.UniqueIdentifier, ID);
+    request.addParameter("user", TYPES.VarChar, user);
+    request.on("requestCompleted", function(){
+        res.send({requested:req.user.username});
+    });
+    connection.execSql(request);
+});
 module.exports = router;

@@ -118,10 +118,10 @@ router.post("/accept", function(req,res, next){
                     console.log(err);
             });
             remove.addParameter('id', TYPES.VarChar, obj.id);
-            connection.execSql(remove);
             remove.on('requestCompleted', function(){
-                res.send(null);
+                res.json({ID:obj.id, requested:rowObject.username, accepted:req.user.username});
             });
+            connection.execSql(remove);
         })
         connection.execSql(acceptRequest);
     });
@@ -161,7 +161,7 @@ router.post("/deny", function(req,res, next){
             });
             remove.addParameter('id', TYPES.VarChar, obj.id);
             remove.on('requestCompleted', function(){
-                res.send(null);
+                res.json({ID:obj.id, requested:rowObject.username, accepted:req.user.username});
             });
             connection.execSql(remove);
         })
