@@ -4,6 +4,13 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 <style>
 body {
   margin: 0;
@@ -76,12 +83,68 @@ body {
 .dropdown:hover .dropdown-content {
   display: block;
 } 
+
+.topnav .search-container {
+  float: right;
+}
+
+.topnav input[type=text] {
+  padding: 6px;
+  margin-top: 8px;
+  font-size: 17px;
+  border: none;
+}
+
+.topnav .search-container button {
+  float: right;
+  padding: 6px 10px;
+  margin-top: 8px;
+  margin-right: 16px;
+  background: #ddd;
+  font-size: 17px;
+  border: none;
+  cursor: pointer;
+}
+
+.topnav .search-container button:hover {
+  background: #ccc;
+}
+
+.h7 {
+    font-size: 0.8rem;
+}
+
+.gedf-wrapper {
+    margin-top: 0.97rem;
+}
+
+@media (min-width: 992px) {
+    .gedf-main {
+        padding-left: 4rem;
+        padding-right: 4rem;
+    }
+    .gedf-card {
+        margin-bottom: 2.77rem;
+    }
+}
+
+/**Reset Bootstrap*/
+.dropdown-toggle::after {
+    content: none;
+    display: none;
+}
 </style>
 <body>
   <div class="topnav">
     <a class="active" href="/home">ELM</a>
+    <!-- Search bar: -->
+    <div class="search-container" style = "float:left; margin-left: 15%; width: 50%">
+        <form action="/motivate/search" method="GET">
+          <input type="text" placeholder="Search in Educate..." name="search" style="width: 90%">
+          <button type="submit"><i class="fa fa-search"></i></button>
+        </form>
+    </div>
     <!-- We need to actually create pages for educate, learn, motivate-->
-      <!--<a class="dropdown" href="/profile"><i class="fa fa-user"></i> Profile</a>-->
     <div class="dropdown" style="float:right; margin-right:5px">
       <button class="dropbtn" onclick="location.href='/profile'" style=" padding-right:30px"><i class="fa fa-user"></i> Profile</button>
       <div class="dropdown-content">
@@ -91,7 +154,74 @@ body {
     </div> 
     <a href="/motivate">Motivate</a>
     <a href="/learn">Learn</a>
-    <a href="/educate">Educate</a>
+    <a href="/educate">Educate</a>    
+</div>
+<!--the body-->
+<div class="container-fluid gedf-wrapper">
+  <div class="row">
+    <!-- communities-->
+    <div class="col-md-3" style="padding-right: 0%;">
+      <div class="card" style="position:fixed; padding-right:0%">
+          <div class="card-body">
+              <div class="h5">Your Communities</div>
+          </div>
+          <ul class="list-group list-group-flush">
+            <!--make sure to fill up this community stuff-->
+            <li href="#" class="list-group-item" >Community 1</li>
+            <li href="#" class="list-group-item">Community 2</li>
+            <li href="#" class="list-group-item" >Community 3</li>
+            <li href="#" class="list-group-item" >Community 4</li>
+            <li href="#" class="list-group-item" >Community 5</li>
+            <li href="#" class="list-group-item" >All</li>
+          </ul>
+      </div>
+    </div>
+
+    <div id="posts" class="col-md-7 gedf-main" style="left: -10%;">
+      <!--make a post-->
+      <div id="make-post" class="card gedf-card">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="posts-tab" data-toggle="tab" href="#posts" role="tab" aria-controls="posts" aria-selected="true">Make
+                        a post</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="images-tab" data-toggle="tab" role="tab" aria-controls="images" aria-selected="false" href="#images">Images</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
+                    <div class="form-group">
+                        <label class="sr-only" for="message">post</label>
+                        <textarea class="form-control" id="message" rows="3" placeholder="What are you thinking?"></textarea>
+                    </div>
+
+                </div>
+                <div class="tab-pane fade" id="images" role="tabpanel" aria-labelledby="images-tab">
+                    <div class="form-group">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="customFile">
+                            <label class="custom-file-label" for="customFile">Upload image</label>
+                        </div>
+                    </div>
+                    <div class="py-4"></div>
+                </div>
+            </div>
+            <div class="btn-toolbar justify-content-between">
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary">share</button>
+                </div>
+            </div>
+        </div>
+      </div>
+      <!-- Post /////-->
+    </div>
+
   </div>
+</div>
+<script src="/scripts/motivatepage.js" type='text/javascript'></script>
 </body>
 </html>

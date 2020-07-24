@@ -21,8 +21,6 @@ const { RTCPeerConnection, RTCSessionDescription } = window;
 
 const peerConnection = new RTCPeerConnection();
 
-//function is called when not active. we wouldn't want to call these anymore
-//since we're not dealing with active boxes or whatnot
 function unselectUsersFromList() {
   const alreadySelectedUser = document.querySelectorAll(
     ".active-user.active-user--selected"
@@ -32,7 +30,7 @@ function unselectUsersFromList() {
     el.setAttribute("class", "active-user");
   });
 }
-//we also likely wouldn't need this
+
 function createUserItemContainer(socketId,user) {
   const userContainerEl = document.createElement("div");
 
@@ -41,7 +39,6 @@ function createUserItemContainer(socketId,user) {
   userContainerEl.setAttribute("class", "active-user");
   userContainerEl.setAttribute("id", socketId);
   usernameEl.setAttribute("class", "username");
-  //usernameEl.innerHTML = `Socket: ${socketId}`;
   usernameEl.innerHTML = "User: " + user;
   userContainerEl.appendChild(usernameEl);
 
@@ -49,7 +46,6 @@ function createUserItemContainer(socketId,user) {
     unselectUsersFromList();
     userContainerEl.setAttribute("class", "active-user active-user--selected");
     const talkingWithInfo = document.getElementById("talking-with-info");
-    //talkingWithInfo.innerHTML = `Talking with: "Socket: ${socketId}"`;
     talkingWithInfo.innerHTML = `Talking with: ` + user;
     callUser(socketId,user);
   });
@@ -68,31 +64,26 @@ async function callUser(socketId, name) {
   });
 }
 
-//again, wouldn't need this, since it's dealing with the whole active users thing
 function updateUserList(socketIds) {
   const activeUserContainer = document.getElementById("active-user-container");
 
   socketIds.forEach(socketId => {
     const alreadyExistingUser = document.getElementById(socketId.id);
+    //only put in the user that is the user
     if (!alreadyExistingUser && (socketId.user === otherUser)) {
       const userContainerEl = createUserItemContainer(socketId.id, socketId.user);
       activeUserContainer.appendChild(userContainerEl);
+      return;
     }
   });
 }
 
-//instead, we'd have to replace this with something else.
-//now though, we wouldn't actually have to deal with the website would we?
-//we can actually just post the information instead maybe
-//actually i think we'd keep this with localhost:3000 hmmm
 const socket = io.connect("localhost:3000", {query:{user:yourself}});
 
 socket.on("update-user-list", ({ users }) => {
-  //alert("hi");
   updateUserList(users);
 });
-//we also wouldn't need this?
-//remember for all these on things, we need to cancel the emit
+
 socket.on("remove-user", ({ socketId }) => {
   const elToRemove = document.getElementById(socketId);
 
@@ -170,7 +161,7 @@ navigator.getUserMedia(
   }
 );
 
-//disconnect socket when closing
+//disconnect socket when closing the window
 window.onbeforeunload = function(e) {
   socket.disconnect();
 };

@@ -47,14 +47,10 @@ var Server = /** @class */ (function () {
     };
     Server.prototype.handleSocketConnection = function () {
         var _this = this;
-        this.io.set('authorization', function (handshake, callback) {
-            callback(null, true);
-        });
         this.io.on("connection", function (socket) {
             var user = socket.handshake.query.user;
             var existingSocket = _this.activeSockets.find(function (existingSocket) { return existingSocket.id === socket.id; });
-            if (!existingSocket) { //if not, update the website
-                //_this.activeSockets.push(socket.id);
+            if (!existingSocket) {
                 _this.activeSockets.push({user: user, id:socket.id});
                 socket.emit("update-user-list", {
                     users: _this.activeSockets.filter(function (existingSocket) { return existingSocket.id !== socket.id; })

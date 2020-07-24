@@ -85,6 +85,7 @@ app.use('/profile', require('./routes/profile.js'));
 app.use('/users', require('./routes/users.js'));
 app.use('/learn', require('./routes/learn.js'));
 app.use('/educate', require('./routes/educate.js'));
+app.use('/motivate', require('./routes/motivate.js'));
 //app.use('/session/video', new server.Server());
 
 //var server_2 = server.Server();
