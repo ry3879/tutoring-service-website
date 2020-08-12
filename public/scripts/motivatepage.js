@@ -1,55 +1,4 @@
-//What the post should look like
-
-/*
-<!-- html for a single post-->
-    <div class="card gedf-card">
-      <div class="card-header">
-          <div class="d-flex justify-content-between align-items-center">
-              <div class="d-flex justify-content-between align-items-center">
-                  Not including this part
-                  <div class="mr-2">
-                      <img class="rounded-circle" width="45" src="https://picsum.photos/50/50" alt="">
-                  </div>
-                  <div class="ml-2">
-                      <div class="h5 m-0">LeeCross</div>
-                  </div>
-              </div>
-              <div>
-                  <div class="dropdown">
-                      <button class="btn btn-link dropdown-toggle" type="button" id="gedf-drop1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          <i class="fa fa-ellipsis-h"></i>
-                      </button>
-                      <div class="dropdown-menu "dropdown-menu-right" aria-labelledby="gedf-drop1">
-                          <div class="h6 dropdown-header">Configuration</div>
-                          <a class="dropdown-item" href="#">Save</a>
-                          <a class="dropdown-item" href="#">Report</a>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-      <div class="card-body">
-          <div class="text-muted h7 mb-2"> <i class="fa fa-clock-o"></i>10 min ago</div>
-          <not adding anchor for now"
-          <a class="card-link" href="#">
-            <!--Title of the post-->
-              <h5 class="card-title" id="title"> Lorem ipsum dolor sit amet, consectetur adip.</h5>
-          </a>
-          <!--details-->
-          <p class="card-text">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo recusandae nulla rem eos ipsa praesentium esse magnam nemo dolor
-              sequi fuga quia quaerat cum, obcaecati hic, molestias minima iste voluptates.
-          </p>
-      </div>
-      <!-- comment and stuff-->
-      <div class="card-footer">
-          <a href="#" class="card-link"><i class="fa fa-gittip"></i> Like</a>
-          <a href="#" class="card-link"><i class="fa fa-comment"></i> Comment</a>
-      </div>
-    </div>
-*/
-
-function create_post(id, username, date, title, details){
+function create_post(id, username, date, title, details,likes, liked){
     var post = document.createElement("div");
     post.setAttribute("id", id);
     post.setAttribute("class", "card gedf-card");
@@ -76,7 +25,63 @@ function create_post(id, username, date, title, details){
     time.appendChild(clock);
     //calculate time here
     //get date and then calculate time and put whatever min ago
-    time.innerHTML = time.innerHTML += "10 min ago";
+    var currTime = new Date();
+    var postDate = new Date(date);
+
+    if(currTime.getFullYear() - postDate.getFullYear() >= 1){
+        var diff = currTime.getFullYear() - postDate.getFullYear();
+        if(diff==1){
+            time.innerHTML += "1 year ago";
+        }
+        else{
+            time.innerHTML += diff + " years ago";
+        }       
+        
+    }
+    else if(currTime.getMonth() - postDate.getMonth() != 0){
+        var diff = currTime.getMonth() - postDate.getMonth();
+        if(diff==1){
+            time.innerHTML += "1 month ago";
+        }
+        else{
+            time.innerHTML += diff + " months ago";
+        }       
+        
+    }
+    else if(currTime.getDay() - postDate.getDay() >= 1){
+        var diff = currTime.getDay() - postDate.getDay();
+        if(diff==1){
+            time.innerHTML += "1 day ago";
+        }
+        else{
+            time.innerHTML += diff + " days ago";
+        }       
+        
+    }
+    else if(currTime.getHours() - postDate.getHours() >= 1){
+        var diff = currTime.getHours() - postDate.getHours();
+        if(diff==1){
+            time.innerHTML += "1 hour ago";
+        }
+        else{
+            time.innerHTML += diff + " hours ago";
+        }       
+        
+    }
+    else if(currTime.getMinutes() - postDate.getMinutes() >= 1){
+        var diff = currTime.getMinutes() - postDate.getMinutes();
+        if(diff==1){
+            time.innerHTML += "1 min ago";
+        }
+        else{
+            time.innerHTML += "1 min ago";
+        }       
+        
+    }
+    else{
+        time += "Just Now";
+    }
+    
     var postTitle = document.createElement("h5");
     postTitle.setAttribute("class", "card-title");
     postTitle.innerHTML = title;
@@ -92,30 +97,78 @@ function create_post(id, username, date, title, details){
     footer.setAttribute("class", "card-footer");
 
     var like = document.createElement("a");
-    like.setAttribute("href", "#");
-    like.setAttribute("class", "card-link");
-    var imageLike = document.createElement("i");
-    imageLike.setAttribute("class", "fa fa-gittip");
-    like.appendChild(imageLike);
-    like.innerHTML = like.innerHTML + " Like";
 
-    var comment = document.createElement("a");
-    comment.setAttribute("href", "#");
-    comment.setAttribute("class", "card-link");
-    var imageComment = document.createElement("i");
-    imageComment.setAttribute("class", "fa fa-comment");
-    comment.appendChild(imageComment);
-    comment.innerHTML = comment.innerHTML + " Comment";
+    like.setAttribute("onclick", "likePost(this.id)");
+    like.setAttribute("class", "card-link");
+    like.setAttribute("id", id + "like");
+    var imageLike = document.createElement("i");
+
+    if(liked)
+        imageLike.setAttribute("class", "like fa fa-thumbs-up");
+    else
+        imageLike.setAttribute("class", "unlike fa fa-thumbs-up");
+
+    var span = document.createElement("span");
+    span.style.color = "black";
+    span.innerText = " " + likes;
+    imageLike.appendChild(span);
+    like.appendChild(imageLike);
 
     footer.appendChild(like);
-    footer.appendChild(comment);
+    
     post.appendChild(cardHeader);
     post.appendChild(cardBody);
     post.appendChild(footer);
 
     var posts = document.getElementById("posts");
     posts.appendChild(post);
-
 }
 
-create_post("rachely", "rachely", "10", "test post","success");
+function likePost(clickedID){
+    var like = document.getElementById(clickedID);
+    var postID = like.parentNode.parentNode.id;
+    var imageLike = like.children[0]
+    if(imageLike.className.includes("unlike")){
+        $.ajax({
+            type:"POST",
+            url: "/motivate/like",
+            data: JSON.stringify({ID:postID}),
+            contentType: "application/json",
+            success: function(res){
+                var span = imageLike.children[0];
+                span.innerText = " " + (parseInt(span.innerText) + 1);
+                imageLike.setAttribute("class", "like fa fa-thumbs-up");
+            }
+        });
+    }
+    else{
+        $.ajax({
+            type:"POST",
+            url: "/motivate/unlike",
+            data: JSON.stringify({ID:postID}),
+            contentType: "application/json",
+            success: function(res){
+                var span = imageLike.children[0];
+                span.innerText = " " + (parseInt(span.innerText) - 1);
+                imageLike.setAttribute("class", "unlike fa fa-thumbs-up");
+            }
+        });
+    }
+
+};
+
+function createMessage(){
+    var message = document.getElementById("message").value;
+    var title = document.getElementById("title").value;
+    $.ajax({
+        type:"POST",
+            url: "/motivate/createmessage",
+            data: JSON.stringify({title: title, message:message}),
+            contentType: "application/json",
+            success: function(res){
+                document.getElementById("message").value = "";
+                document.getElementById("title").value = "";
+            }
+    });
+    
+}
