@@ -114,7 +114,7 @@ router.post("/removeSubject", function(req,res){
 router.post("/addSubject", function(req,res){
   var obj = req.body;
   var subjectArray = [];
-  var updateSubject = new Request("INSERT INTO dbo."+req.user.username+"_subject_table (Subject, Hours) VALUES (@subject, 0.0)",
+  var updateSubject = new Request("INSERT INTO dbo."+req.user.username+"_subject_table (Subject, Hours, Number) VALUES (@subject, 0.0, 0)",
   function(err){
     if(err)
       console.log(err);
