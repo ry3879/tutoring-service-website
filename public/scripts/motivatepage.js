@@ -74,7 +74,7 @@ function create_post(id, username, date, title, details,likes, liked){
             time.innerHTML += "1 min ago";
         }
         else{
-            time.innerHTML += "1 min ago";
+            time.innerHTML += diff + " mins ago";
         }       
         
     }

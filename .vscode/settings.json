@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/24ae32ea-d3ee-4efd-998f-6904bc22bbe3/resourceGroups/SummerHacks2020/providers/Microsoft.Web/sites/edulearnmotivate",
+    "appService.deploySubpath": "."
+}

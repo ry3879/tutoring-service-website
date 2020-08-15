@@ -20,7 +20,8 @@ router.get('/', ensureAuthenticated, function(req,res){
     request.on("row", function(columns){
         var rowObject ={};
         columns.forEach(function(column) {
-            rowObject[column.metadata.colName] = column.value;
+            if(column.value != null)
+                rowObject[column.metadata.colName] = column.value;
         });
         requestArray.push(rowObject);
     });
@@ -31,10 +32,12 @@ router.get('/', ensureAuthenticated, function(req,res){
         });
         request2.addParameter("user", TYPES.VarChar, req.user.username);
         acceptedArray = [];
+        var count = 0;
         request2.on("row", function(columns){
             var rowObject ={};
             columns.forEach(function(column) {
                 rowObject[column.metadata.colName] = column.value;
+                
             });
             acceptedArray.push(rowObject);  
         });
